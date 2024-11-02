@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<body>
+    <!-- Background Image Section -->
+    <div class="bg-dark text-white text-center" style="background-image: url('https://watermark.lovepik.com/photo/40143/6442.jpg_wh1200.jpg'); background-size: cover; height: 90vh; display: flex; flex-direction: column; justify-content: center;">
+        <div class="container" style="padding-top: 200px;">
+            <h1>"Find Your Dream Rental"</h1>
+            <form method="GET" action="{% url 'property_search' %}" class="input-group mt-6 mx-auto" style="max-width: 500px;">
+                <input type="text" name="q" class="form-control" placeholder="Search by City" value="{{ request.GET.q }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+<!-- Top Visited Properties Section -->
+<div class="top-visited-properties mt-5">
+    <h2 class="text-center mb-4">Top Visited Properties</h2>
+    <div class="row justify-content-center">
+        {% for property in top_visited_properties %}
+            <div class="col-md-4 col-sm-7 col-lg-3 mb-5">
+                <div class="card shadow-sm" style="max-width: 300px;">
+                    <a href="{% url 'property_details' property.id %}">
+                    <img src="{{ property.image.url }}" class="card-img-top" alt="Property Image" style="height: 150px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">{{ property.name }}</h5>
+                        <p class="card-text mb-1"><i class="fas fa-map-marker-alt"></i> {{ property.address }}</p>
+                        <p class="card-text mb-2"><strong>${{ property.property_price }}</strong></p>
+                        <p class="card-text small">Visits: {{ property.visit_count }}</p>
+                        <a href="{% url 'property_details' property.id %}" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+                    </div>
+                </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- agents Section -->
+<div class="container people-section mt-5 text-center">
+    <h2 class="mb-4">Top Real Estate Agents</h2>
+    <div class="row justify-content-center">
+        {% for agent in agents %}
+            <div class="col-md-3 d-flex mb-4">
+                <div class="card w-100 border-0 text-center">
+                    <img src="{{ agent.image_url }}" class="card-img-top rounded-circle mx-auto mt-3" style="height: 150px; width: 150px; object-fit: cover;" alt="Agent Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ agent.name }}</h5>
+                        <p class="card-text">{{ agent.description }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
