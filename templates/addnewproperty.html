@@ -1,43 +1,71 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
+<!-- Container Section -->
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <!-- Card Section -->
             <div class="card shadow">
+                
+                <!-- Header Section -->
                 <div class="card-header bg-primary text-white">
                     <h3 class="mb-0">Add New Property</h3>
                 </div>
+                
+                <!-- Form Section -->
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                         {% csrf_token %}
+                        
+                        <!-- Table for Form Fields -->
+                        <table class="table table-borderless">
+                            {% for field in form %}
+                                <tr>
+                                    <!-- Label Column -->
+                                    <td style="width: 20%;">
+                                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    </td>
 
-                        <!-- Loop through each form field and apply Bootstrap classes -->
-                        {% for field in form %}
-                            <div class="form-group mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                {{ field }}
+                                    <!-- Input Field Column -->
+                                    <td>
+                                        {{ field }}
+                                        
+                                        <!-- Error Messages -->
+                                        {% if field.errors %}
+                                            <div class="text-danger small mt-1">
+                                                {% for error in field.errors %}
+                                                    {{ error }}<br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                            <!-- Image Upload Row -->
+                            <tr>
+                                <td colspan="2">
+                                    {{ image_form.as_p }}
+                                </td>
+                            </tr>
+                        </table>
 
-                                <!-- Display error message if the field is invalid -->
-                                {% if field.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {% for error in field.errors %}
-                                            {{ error }}<br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary w-100">Add Property</button>
+                        <!-- Submit Button Section -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary w-100">Add Property</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<br>
-<br>
-<br>
-{% endblock %}
+<!-- <h3>Upload Property Images:</h3>
+    {% for form in formset %}
+        {{ form.as_p }}
+    {% endfor %}
+    
+    <button type="submit">Save Property</button>
+{% endblock %} -->

@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-{% load static %}
+<!-- {% load static %} -->
 
 <body>
     <!-- Background Image Section -->
-    <div class="bg-dark text-white text-center" style="background-image: url('https://watermark.lovepik.com/photo/40143/6442.jpg_wh1200.jpg'); background-size: cover; height: 90vh; display: flex; flex-direction: column; justify-content: center;">
+    <div class="bg-section">
         <div class="container" style="padding-top: 200px;">
+            <br><br><br><br><br><br>
             <h1>"Find Your Dream Rental"</h1>
             <form method="GET" action="{% url 'property_search' %}" class="input-group mt-6 mx-auto" style="max-width: 500px;">
                 <input type="text" name="q" class="form-control" placeholder="Search by City" value="{{ request.GET.q }}">
@@ -42,18 +43,22 @@
 <div class="container people-section mt-5 text-center">
     <h2 class="mb-4">Top Real Estate Agents</h2>
     <div class="row justify-content-center">
-        {% for agent in agents %}
+        {% for agent in top_agents %}
             <div class="col-md-3 d-flex mb-4">
                 <div class="card w-100 border-0 text-center">
-                    <img src="{{ agent.image_url }}" class="card-img-top rounded-circle mx-auto mt-3" style="height: 150px; width: 150px; object-fit: cover;" alt="Agent Image">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ agent.name }}</h5>
-                        <p class="card-text">{{ agent.description }}</p>
-                    </div>
+                    <!-- <a href="{% url 'agent_details_for_users' agent.id %}"> -->
+                        <a href="#">
+                        <img src="{{ agent.agent_image.url }}" class="card-img-top rounded-circle mx-auto mt-3" style="height: 150px; width: 150px; object-fit: cover;" alt="Agent Image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ agent.agent.first_name }}</h5>  <!-- Make sure `agent.agent` is correctly set up -->
+                            <p class="card-text">{{ agent.phone }}</p>  <!-- Verify `phone` is the correct field name -->
+                        </div>
+                    </a>
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
+
 
 {% endblock %}

@@ -7,59 +7,62 @@
     <title>uniqueproperties</title>
     
     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
     <!-- Bootstrap Icons CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar" style="background-color: #092003;">
         <div class="container">
-            <ul class="nav navbar">
-                <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'rental' %}">Rent</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'buy' %}">Buy</a></li>
-                {% if user.is_authenticated %}
-                    {% if request.user.userprofile.user_type == 'regular'%}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'ownerreg' %}">Sell</a></li>
-                    {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'addnewproperty' %}">Sell</a></li>
-                    {% endif %}
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'ownerreg' %}">Sell</a></li>
-                {% endif %}
 
+            <ul class="nav navbar">
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'index' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'rental' %}">Rent</a></li>
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'buy' %}">Buy</a></li>
+                {% if user.is_authenticated %}
+                    
+                    {% if request.user.userprofile.user_type == 'regular'%}
+                        <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'ownerreg' %}">Sell</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'addnewproperty' %}">Sell</a></li>
+                    {% endif %}
+                    
+                {% else %}
+                    <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'login' %}">Sell</a></li>
+                {% endif %}
             </ul>
+
             <ul class="nav navbar ms-auto">
                 {% if user.is_authenticated %}
                     {% if request.user.userprofile.user_type == 'regular'%}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'wishlist' %}"><i class="bi bi-heart-fill text-danger"></i> Wishlist</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'userdetails' %}">{{ user.username }}</a></li>
-
+                        <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'wishlist' %}"><i class="bi bi-heart-fill text-danger"></i> Wishlist</a></li>
+                        <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'userdetails' %}">{{ user.username }}</a></li>
                     {% elif request.user.property_owner.user_type == 'owner'%}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'ownerdetails' %}">Login as owner: {{ user.first_name }}</a></li>
-
-                    {% elif request.user.agents.user_type == 'agent'%}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'agentdetails' %}">Login as Agent: {{ user.first_name }}</a></li>
-
-                    {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-
+                        <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'ownerdetails' %}">Login as owner: {{ user.first_name }}</a></li>
                     {% endif %}
-
                 {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link text-white fw-bold" href="{% url 'login' %}">Login</a></li>
                 {% endif %}
             </ul>
 
         </div>
     </nav>
+
     {% block content %}
     {% endblock %}
 <br>
 <br>
 <br>
+
     <!-- Footer -->
     <footer class="bg-dark text-white pt-5 pb-3">
         <div class="container">
@@ -107,7 +110,6 @@
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
 
 </body>
 </html>

@@ -1,16 +1,23 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from properties.models import property
 from accounts.models import *
-from properties.forms import PropertyForm
+from properties.forms import *
 from django.contrib import messages
 from django.contrib.auth.models import User
-
+from django.conf import settings
+import os
 
 def index(request):
     rental_properties=property.objects.all()
+    # Check if the user has an active subscription
+    has_subscription = Subscription.objects.filter(user=request.user).exists()
     top_visited_properties = property.objects.order_by('-visit_count')[:3]
+    top_agents = Agents.objects.order_by('-id')[:3]
+
     return render(request,"index.html", {"rental_properties":rental_properties,
-                                         "top_visited_properties": top_visited_properties,}) 
+                                         "top_visited_properties": top_visited_properties,
+                                         'top_agents':top_agents,
+                                         'has_subscription':has_subscription}) 
 
 def Rental(request):
     rental_properties=property.objects.all()
@@ -25,21 +32,44 @@ def property_details(request, id):
     # Increment visit count
     property_detail.visit_count += 1
     property_detail.save()
-
+    has_subscription = Subscription.objects.filter(user=request.user).exists()
     owner_id= property_detail.owners.id
     agent_id= property_detail.owners.id
-    owner_details= get_object_or_404(User, id=owner_id)
-    agent_details= get_object_or_404(User, id=agent_id)
+    owner_details= get_object_or_404(property_owner, owner_id=owner_id)
+    # agent_details= get_object_or_404(Agents, agent_id=agent_id)
 
     # Get wishlist items for the current user
     wishlist_items = Wishlist.objects.filter(user=request.user).values_list('property_id', flat=True) if request.user.is_authenticated else []
     context={
         'property_detail': [property_detail],
         'owner_details': [owner_details],
-        'agent_details': [agent_details],
+        # 'agent_details': [agent_details],
         'wishlist_items': wishlist_items,
+        'has_subscription': has_subscription,
     }
     return render(request, 'property_details.html', context)
+
+def property_details_Subscription(request, id):
+    property_detail = get_object_or_404(property, id=id)
+    # Increment visit count
+    property_detail.visit_count += 1
+    property_detail.save()
+    has_subscription = Subscription.objects.filter(user=request.user).exists()
+    owner_id= property_detail.owners.id
+    agent_id= property_detail.owners.id
+    owner_details= get_object_or_404(property_owner, owner_id=owner_id)
+    # agent_details= get_object_or_404(Agents, agent_id=agent_id)
+
+    # Get wishlist items for the current user
+    wishlist_items = Wishlist.objects.filter(user=request.user).values_list('property_id', flat=True) if request.user.is_authenticated else []
+    context={
+        'property_detail': [property_detail],
+        'owner_details': [owner_details],
+        # 'agent_details': [agent_details],
+        'wishlist_items': wishlist_items,
+        'has_subscription': has_subscription,
+    }
+    return render(request, 'property_details_subscription.html', context)
 
 
 def property_search(request):
@@ -53,32 +83,12 @@ def property_search(request):
 
     return render(request, 'property_search_results.html', {'properties': properties, 'query': query})
 
-# def AddNewProperty(request):
-#     if request.method == "POST":
-#         form = PropertyForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             new_property = form.save(commit=False)
-            
-#             # Check if the logged-in user is an owner or agent
-#             try:
-#                 if hasattr(request.user, 'property_owner'):
-#                     new_property.owners = request.user.property_owner.owner  # Assign property_owner's user ID
-#                 elif hasattr(request.user, 'Agents'):
-#                     new_property.owners = request.user.Agents.agent  # Assign agent's user ID
-#                 else:
-#                     messages.error(request, "User must be a property owner or agent to add properties.")
-#                     return redirect('addnewproperty')
-                
-#                 new_property.save()
-#                 messages.success(request, "Property added successfully!")
-#                 return redirect("ownerdetails")
-                
-#             except Exception as e:
-#                 messages.error(request, f"An error occurred: {str(e)}")
-#     else:
-#         form = PropertyForm()
 
-#     return render(request, 'addnewproperty.html', {"form": form})
+def Agent_Details_For_users(request,id):
+    agent_details = get_object_or_404(Agents, id=id)
+    return render(request,'accounts/agent_details_for_users.html',{"agent_details":agent_details})
+
+
 
 def AddNewProperty(request):
     if request.method == "POST":
@@ -95,6 +105,41 @@ def AddNewProperty(request):
         form = PropertyForm()  # Create an empty form for GET requests
 
     return render(request, 'addnewproperty.html', {"form": form})
+
+# def AddNewProperty(request):
+#     if request.method == 'POST':
+#         property_form = PropertyForm(request.POST)
+#         PropertyImageFormSet = modelformset_factory(PropertyImage, form=PropertyImageForm, extra=3)  # Allows up to 3 images
+#         formset = PropertyImageFormSet(request.POST, request.FILES)
+
+#         if property_form.is_valid() and formset.is_valid():
+#             property_instance = property_form.save()
+
+#             for form in formset:
+#                 image = form.cleaned_data.get('image')
+#                 if image:
+#                     PropertyImage.objects.create(property=property_instance, image=image)
+
+#             return redirect('index')  # Redirect to the property listing page after saving
+
+#     else:
+#         property_form = PropertyForm()
+#         PropertyImageFormSet = modelformset_factory(PropertyImage, form=PropertyImageForm, extra=3)
+#         formset = PropertyImageFormSet(queryset=PropertyImage.objects.none())  # Start with an empty formset
+
+#     return render(request, 'addnewproperty.html', {'property_form': property_form, 'formset': formset})
+
+# def AddNewProperty(request):
+#     if request.method == "POST":
+#         form = PropertyForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("index")  # replace with your success URL
+#     else:
+#         form = PropertyForm()
+#     return render(request, "addnewproperty.html", {"form": form})
+
+
 
 def edit_property(request, property_id):
     # Retrieve the specific property by its ID
@@ -128,3 +173,24 @@ def Buying_Property(request):
     return render(request,'accounts/buying_property.html')
 
 
+def submit_rating(request, property_id):
+    property_instance = get_object_or_404(property, id=property_id)
+
+    if request.method == 'POST':
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            new_rating = int(form.cleaned_data['rating'])
+
+            # Update the average rating
+            total_rating = property_instance.rating * property_instance.rating_count
+            property_instance.rating_count += 1
+            property_instance.rating = round((total_rating + new_rating) / property_instance.rating_count, 1)
+            property_instance.save()
+
+            messages.success(request, "Thank you for rating!")
+            return redirect('property_details', id=property_id)
+
+    else:
+        form = RatingForm()
+
+    return render(request, 'submit_rating.html', {'form': form, 'property': property_instance})

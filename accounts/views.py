@@ -24,6 +24,7 @@ def User_Registration(request):
             profile.save()
             messages.success(request, "Resistered successfully!")
             registation=True
+            return redirect('login')
     else:
         form1 = UserForm1()
         form2=UserForm2()
@@ -47,8 +48,9 @@ def UserLogin(request):
     return render(request, "accounts/login.html")
 
 def UserDetails(request):
+    has_subscription = Subscription.objects.filter(user=request.user).exists()
     UserDetails=UserProfile.objects.get(user=request.user)
-    return render(request,'accounts/userdetails.html',{'UserDetails':UserDetails})
+    return render(request,'accounts/userdetails.html',{'UserDetails':UserDetails,"has_subscription":has_subscription})
 
 def edit_user_profile(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
@@ -80,6 +82,7 @@ def Owner_Registration(request):
             profile.owner=user
             profile.save()
             registation=True
+            return redirect('login')
     else:
         form1 = OwnerForm1()
         form2=OwnerForm2()
@@ -151,6 +154,7 @@ def Agent_Registration(request):
             profile.save()
             messages.success(request, "Resistered successfully!")
             registation=True
+            return redirect('login')
     else:
         form1 = AgentForm1()
         form2=AgentForm2()
@@ -167,10 +171,12 @@ def edit_agent_profile(request):
         form = EditAgentProfileForm(instance=agent_profile)
     return render(request, 'accounts/edit_agent_details.html', {'form': form})
 
+
 def AgentDetails(request):
     AgentDetails=Agents.objects.get(agent =request.user)
     AgentProperties = property.objects.filter(owners = request.user).order_by('id')
-    return render(request,'accounts/agentdetails.html',{'AgentDetails':AgentDetails,'AgentProperties':AgentProperties})
+    return render(request,'accounts/agentdetails.html',{'AgentDetails':AgentDetails,
+                                                        'AgentProperties':AgentProperties,})
 
 
 # Wishlist section
@@ -192,3 +198,15 @@ def remove_from_wishlist(request, property_id):
     Wishlist.objects.filter(user=request.user, property_id=property_id).delete()
     # return redirect('wishlist')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required
+def create_subscription(request):
+    if request.method == 'POST':
+        form = SubscriptionForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('index')  # Redirect to a success page or another view
+    else:
+        form = SubscriptionForm(user=request.user)
+    return render(request, 'accounts/subscription_form.html', {'form': form})

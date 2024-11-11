@@ -8,7 +8,22 @@
             {% for i in buying_properties %}
                 {% if i.post_type_id == 2 %}
                 <div class="col-md-4 d-flex align-items-stretch mb-4">
-                    <div class="card h-100" style="width: 18rem;">
+                    <div class="card h-100 position-relative" style="width: 18rem;">
+                        
+                        <!-- Wishlist Icon on the Top Right -->
+                        <div class="position-absolute top-0 end-0 m-2">
+                            {% if i.id not in wishlist_items %}
+                                <a href="{% url 'add_to_wishlist' i.id %}" class="text-decoration-none text-danger">
+                                    <i class="far fa-heart fa-lg"></i> <!-- Empty Heart for not in wishlist -->
+                                </a>
+                            {% else %}
+                                <a href="{% url 'remove_from_wishlist' i.id %}" class="text-decoration-none text-danger">
+                                    <i class="fas fa-heart fa-lg"></i> <!-- Filled Heart for in wishlist -->
+                                </a>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Property Image -->
                         {% if i.image %}
                             <a href="{% url 'property_details' i.id %}">
                                 <img src="{{ i.image.url }}" class="card-img-top" alt="Property Image" style="height: 200px; object-fit: cover;">
@@ -16,9 +31,20 @@
                         {% else %}
                             <p>No image available</p>
                         {% endif %}
+                        
+                        <!-- Rating Icon on the Top Left with Light Yellow Background -->
+                        <div class="position-absolute top-0 start-0 m-2 d-flex align-items-center" style="background-color: #d9cf70; border-radius: 5px; padding: 4px 8px;">
+                            <i class="fas fa-star text-warning"></i>
+                            <span class="ms-1">{{ i.rating|default:"0.0"|floatformat:1 }}</span> <!-- Displays the rating rounded to 1 decimal -->
+                        </div>
+                        
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title"><a href="{% url 'property_details' i.id %}">{{ i.name }}</a></h5>
-                            <p class="card-text"><h6>Location: {{ i.address }}</h6></p>
+                            <h5 class="card-title">
+                                <a href="{% url 'property_details' i.id %}">{{ i.name }}</a>
+                            </h5>
+                            <p class="card-text">
+                                <h6>Location: {{ i.address }}</h6>
+                            </p>
                             <a class="btn btn-primary mt-auto" href="{% url 'property_details' i.id %}">Get details</a>
                         </div>
                     </div> 
@@ -29,4 +55,4 @@
     </div> 
 </div>       
 <br>
-{% endblock %} 
+{% endblock %}

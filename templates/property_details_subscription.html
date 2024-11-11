@@ -1,0 +1,568 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .fsec {
+        border: 1px solid rgb(214, 200, 200);
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px 6px #e7e7e7;
+    }
+
+    .flx {
+        display: flex
+    }
+
+    .price {
+        font-weight: 700;
+        font-size: large;
+    }
+
+    .fx {
+        justify-content: start;
+    }
+
+    .otr {
+        margin-left: 10px;
+        color: grey;
+        margin-bottom: -14px;
+    }
+
+    .otr>span {
+        border: 1px solid grey;
+    }
+
+    .ssec {
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px 6px #beb4b4;
+    }
+
+    .anr>a {
+        color: #908686;
+        font-weight: 200;
+    }
+
+    .address {
+        font-size: 15px;
+    }
+
+    .address>p>a {
+        color: #908686;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .imgbrd {
+        height: 300px;
+        width: 300px;
+        border: 1px solid rgb(174, 174, 174);
+        border-radius: 10px;
+    }
+
+    .imgbrd>img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .info {
+        border-radius: 5px;
+        background-color: #e6e4e4;
+    }
+
+    .info>ul {
+        display: flex;
+        list-style: none;
+        color: rgb(56, 48, 48);
+        margin-bottom: 0px;
+        padding: 6px;
+    }
+
+    .info>ul>li {
+        padding: 5px 10px 10px 5px;
+    }
+
+    .grd>table {
+        width: 100%;
+    }
+
+    .grd>table>tbody>tr>td {
+        padding: 10px 20px 10px 20px;
+    }
+
+    .area>a {
+        color: black;
+        font-weight: 300;
+        text-decoration: none;
+    }
+
+    .aprice>a {
+        color: #746d6d;
+        text-decoration: none;
+        font-size: small;
+    }
+
+    .num {
+        font-weight: 700;
+    }
+
+    .owner {
+        text-align: left;
+    }
+
+    .phn {
+        font-size: 15px;
+        font-weight: 300;
+    }
+
+    .owner>a>button {
+        border: 1px white solid;
+        width: 100%;
+        border-radius: 45px;
+        height: 45px;
+        background-color: #bd2727;
+        color: white;
+
+    }
+
+    .sf {
+        width: 170px;
+        height: 5px;
+    }
+
+    .owncont {
+        display: flex;
+        padding: 17px 40px 40px 30px;
+
+    }
+
+    .owncont>.sf {
+        justify-content: left;
+    }
+
+    .mbttn {
+        border: 1px white solid;
+        border-radius: 45px;
+        width: 200px;
+        height: 20px;
+    }
+
+    .line {
+        width: 100%;
+        border: 1px solid #cdc8c8;
+        margin-top: 30px;
+    }
+
+    .moredetails {
+        margin-top: 30px;
+    }
+
+    .rentd>table {
+        width: 100%;
+    }
+
+    .tdbold {
+        font-weight: 700;
+    }
+
+    .ank>a {
+        color: red;
+        font-weight: 700;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 mt-4">
+                {% for i in property_detail %}
+                <div class="fsec">
+                    <div class="flx">
+                        <div class="price fx">
+                            <span>$</span>
+                            {{i.property_price}}
+                        </div>
+                        <div class="fx otr">
+                            <p>see other charges </p>
+                            <!-- <span class="info"><i class="fa-solid fa-info"></i></span> -->
+                        </div>
+                    </div>
+
+                    <div class="anr">
+                        <b><p>{{i.name}}</p></b>
+                    </div>
+
+                    <div class="address mt-2">
+                        <p>{{i.proprty_info}} Flat {{i.area}} Sq-ft For Rent in {{i.address}}, <a href="#"> {{i.city}}</a> <i
+                                class="fa-solid fa-location-dot m-1"></i> <a href="#">View on map</a></p>
+                    </div>
+
+                    <!-- gallery -->
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="imgbrd">
+                                <img src="{{i.image.url}}"
+                                    alt="loading-image!!">
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="imgrightside">
+                                <div class="info">
+                                    <ul>
+                                        <li><i class="fa-solid fa-bed"></i><span class="num"> 1 </span>Beds <span
+                                                class="m-3">|</span></li>
+                                        <li><i class="fa-solid fa-bath"></i><span class="num"> 2 </span> Baths <span
+                                                class="m-3">|</span></li>
+                                        <li><i class="fa-regular fa-building"></i><span class="num"> 1 </span>Balcony
+                                            <span class="m-3">|</span></li>
+                                    </ul>
+                                </div>
+
+                                <div class="grd">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <b><span>Super Build up area</span></b>
+                                                <div class="area"><a href="#">{{i.area}}sqft</a></div>
+                                                <div class="aprice"><a href="#">$ 31/sqft</a></div>
+                                            </td>
+                                            <td>
+                                                <b><span>Age of Building</span></b>
+                                                <div class="area"><a href="#">{{i.age}}years</a></div>
+                                                <!-- <div class="aprice"><a href="#">n</a></div> -->
+                                            </td>
+                                            <td>
+                                                <b><span>Parking</span></b>
+                                                <div class="area"><a href="#">{{i.parking}}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b><span>Facing</span></b>
+                                                <div class="area"><a href="#">{{i.facing}}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            
+                                            <td>
+                                                <b><span>Pet friendly</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.pet_friendly %}YES{% else %}NO{% endif %}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            <td>
+                                                <b><span>Sunlight Access</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.sunlight_access %}YES{% else %}NO{% endif %}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b><span>Water Drainage</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.water_drainage %}YES{% else %}NO{% endif %}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            <td>
+                                                <b><span>Garden</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.garden %}YES{% else %}NO{% endif %}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            <td>
+                                                <b><span>Proprty Status</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.proprty_status %}Available{% else %}Not Available{% endif %}</a></div>
+                                            </td>
+                                            
+                                            <tr>
+                                                <td>
+                                                    <b><span>For Family</span></b>
+                                                    <div class="area"><a href="#"></a>{% if i.for_family %}YES{% else %}NO{% endif %}</a></div>
+                                                </td>
+                                                <td>
+                                                    <b><span>For Business</span></b>
+                                                    <div class="area"><a href="#"></a>{% if i.for_business %}YES{% else %}NO{% endif %}</a></div>
+                                                </td>
+                                                <td>
+                                                    <b><span>No of floors</span></b>
+                                                    <div class="area"><a href="#">{{i.No_of_floors}}</a></div>
+                                                    <!-- <div class="aprice"><a href="#">n</a></div> -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b><span>Furnish Detail</span></b>
+                                                    <div class="area"><a href="#">{{i.furnish_detail}}</a></div>
+                                                    
+                                                </td> 
+                                                <td>
+                                                    <b><span>Lift</span></b>
+                                                    <div class="area"><a href="#"></a>{% if i.Lifts %}YES{% else %}NO{% endif %}</a></div>
+                                                    
+                                                </td> 
+                                                <td>
+                                                    <b><span>Road Side Parking</span></b>
+                                                    <div class="area"><a href="#"></a>{% if i.road_side_parking %}YES{% else %}NO{% endif %}</a></div>
+                                                    
+                                                </td> 
+                                            </tr>
+                                            <td>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <table>
+                    <div class="rentd mt-4 mb-4">
+                        <td>
+                            <p class="tdbold">Description:</p>
+                        </td>
+                        <td >
+                            <p >{{i.description}} </p>
+                            
+                        </td>
+                    </div>
+                
+                
+                    </table>
+                    <div style="display: flex; justify-content: center; align-items: center; flex-direction: row; gap: 10px; padding: 20px;">
+                        {% if request.user.userprofile.user_type == 'regular' %}
+                            <a href="{% url 'buying_property' %}" class="btn btn-primary">Contact</a>
+                            {% if i.id not in wishlist_items %}
+                                <a href="{% url 'add_to_wishlist' i.id %}" class="btn btn-outline-primary">Add to Wishlist</a>
+                            {% else %}
+                                <a href="{% url 'remove_from_wishlist' i.id %}" class="btn btn-outline-danger">Remove from Wishlist</a>
+                            {% endif %}
+                            {% if not has_subscription %}
+                                <a href="{% url 'create_subscription' %}" class="btn btn-info">Get More Details</a>
+                            {% else %}
+                                <a href="{% url 'property_details_subscription' i.id %}" class="btn btn-primary">Get More Details</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                    
+                    <!-- gallery ends -->
+
+                    <!-- contact owner -->
+                    <!-- <div class="line"></div>
+                    <div class="owncont">
+                        <div class="uline owner sf">
+                            <a href="#"><button>Contact owner</button></a>
+                        </div>
+                    </div> -->  
+                
+                
+                
+                
+
+                <div class="fsec moredetails">
+                    <div>
+                        <h2>More Details</h2>
+                    </div>
+                    <div class="rentd mt-4 mb-4">
+                        <table>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Rental Value:</p>
+                                </td>
+                                <td >
+                                    <p >$ {{i.property_price}} </p>
+                                    
+                                </td>
+                            
+                                <td>
+                                    <p class="tdbold">Address:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.address}},{{i.city}},{{i.state}},{{i.country}}
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Landmark:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Landmark}}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Nearby Schools:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.nearby_schools}}</p>
+                                </td>
+                            
+                                <td>
+                                    <p class="tdbold">Nearby Hospitals:</p>
+                                </td>
+                                <td>
+                                    <p>{{i.nearby_hospitals}}
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Property Features:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Property_Features}}</p>
+                                </td>
+                            
+                                <td>
+                                    <p class="tdbold">Adjacent Roads:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Adjacent_Roads}} </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Population Mix:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.population_mix|join:", " }}</p>
+                                    
+                                </td>
+                            
+                                <td>
+                                    <p class="tdbold">Locality:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.locality|join:", " }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Engagement Centers:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.ENGAGEMENT_CENTERS|join:", " }}</p>
+                                </td>
+                                <td>
+                                    <p class="tdbold">Industries Nearby:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.INDUSTRIES_NEARBY|join:", " }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Utilities:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.UTILITIES|join:", " }}</p>
+                                </td>
+                                <td>
+                                    <p class="tdbold">Maintanance:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.MAINTENANCE|join:", " }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Historical Places:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.HISTORICAL|join:", " }}</p>
+                                </td>
+                                <td>
+                                    <p class="tdbold">HealthCare:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Healthcare|join:", " }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Administration:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Administration|join:", " }}</p>
+                                </td>
+                                <td>
+                                    <p class="tdbold">Safety and Security:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Safety_Security|join:", " }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Accessibility:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Accessibility|join:", " }}</p>
+                                </td>
+                                <td>
+                                    <p class="tdbold">Green Spaces:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Green_Spaces|join:", " }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="tdbold">Child_Care:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Education_Child_Care|join:", " }}</p>
+                                </td>
+                                <td>
+                                    <p class="tdbold">Weather Reports:</p>
+                                </td>
+                                <td >
+                                    <p>{{i.Weather_Factors|join:", " }}</p>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+
+                    
+                {% endfor %}
+                    <div class="owncont">
+                        <div class="uline owner sf">
+                            <a href="#"><button>Contact owner</button></a>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+            
+
+            <!-- 2nd row starts -->
+            <div class="col-sm-3 mt-4" style="position: absolute; top: 80px; right: 20px;">
+                <div class="ssec">
+                    {% for i in owner_details %}
+                        {% if i.owner_image %}
+                                <img src="{{ i.owner_image.url }}" alt="Owner Image" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 15px;">
+                                    <p class="m-0">No Image</p>
+                                </div>
+                        {% endif %}
+                    <!-- Other details below -->
+                    <div class="owner">
+                        <h5>Contact Owner</h5>
+                        <h6>Mohan MM {% if has_subscription %}<span class="phn">{{ i.phone }}</span>{% endif %}</h6>
+
+                        <!-- <a href="#"><button>Make offer</button></a> -->
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            
+            
+                    
+        </div>
+    </div>
+
+</body>
+{% endblock %}

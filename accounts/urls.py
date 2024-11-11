@@ -25,4 +25,6 @@ urlpatterns = [
     path('wishlist/add/<int:property_id>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('wishlist/remove/<int:property_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
 
+    path('subscribe/', views.create_subscription, name='create_subscription'),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
