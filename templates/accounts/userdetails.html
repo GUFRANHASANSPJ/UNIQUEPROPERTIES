@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Subscription Status Indicator at the top-right -->
+        <div class="col-12 d-flex justify-content-end mb-3">
+            {% if has_subscription %}
+                <span class="badge bg-success" style="font-size: 1.2rem; padding: 0.5rem 1rem;">Subscribed</span>
+            {% else %}
+                <a href="{% url 'create_subscription' %}" class="btn btn-outline-primary badge bg-success" style="font-size: 1.2rem; padding: 0.5rem 1rem;">Subscribe</a>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <!-- User Profile Image -->
+            {% if UserDetails.images %}
+                <img style="height: 200px; width:200px;" src="{{ UserDetails.images.url }}" alt="Profile Picture" class="img-fluid rounded-circle">
+            {% else %}
+                <p>No image</p>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <!-- User Details -->
+            <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+                <li class="list-group-item"><strong>Phone:</strong> {{ UserDetails.phone }}</li>
+                <li class="list-group-item"><strong>Address:</strong> {{ UserDetails.address }}</li>
+            </ul>
+            <br>
+             <!-- Edit Profile and Logout Buttons -->
+             <div class="d-flex">
+                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+                <a href="{% url 'edit_user_details' %}" class="btn btn-primary ms-3">Edit Profile</a>
+                {% if not has_subscription %}
+                    <a href="{% url 'create_subscription' %}" class="btn btn-primary ms-3">Buy Subscription</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock %}

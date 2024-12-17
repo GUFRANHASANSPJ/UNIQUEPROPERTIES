@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    
+</style>
+
+<div class="container mt-5">
+    <h1 class="text-center">Contact Us</h1>
+    <form method="post" action="" class="mt-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="name" class="form-label">Your Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Your Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+        <div class="mb-3">
+            <label for="subject" class="form-label">Subject</label>
+            <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter subject" required>
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <!-- FAQ Section -->
+    <div class="faq-section mt-5">
+        <h2 class="text-center">Frequently Asked Questions</h2>
+        <div class="accordion mt-4" id="faqAccordion">
+            <!-- Question 1: About the Real Estate App -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq1">
+                    <button
+                        class="accordion-button toggle-arrow"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapse1"
+                        aria-expanded="false"
+                        aria-controls="collapse1"
+                        style="font-weight: bold; color: black;"
+                    >
+                        What is this real estate app about?
+                        <!-- <span class="toggle-arrow" style="margin-left: auto; transform: rotate(0deg); transition: transform 0.3s;">&#9662;</span> -->
+                    </button>
+                </h2>
+                <div
+                    id="collapse1"
+                    class="accordion-collapse collapse show"
+                    aria-labelledby="faq1"
+                     aria-expanded="true"
+                    data-bs-parent="#faqAccordion"
+                >
+                    <div class="accordion-body">
+                        This app helps users browse, buy, rent, and manage properties. Property owners can list their properties, and potential buyers or tenants can contact them directly through the app.
+                    </div>
+                </div>
+            </div>
+            
+    
+            <!-- Question 2: How to login/logout -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq2">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2" style="font-weight: bold; color: black;">
+                        How do I log in or log out?
+                    </button>
+                </h2>
+                <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        To log in, click on the "Login" button at the top right of the website and enter your credentials. To log out, click on your profile menu and select "Logout."
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Question 3: How to contact the property owner -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq3">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3" style="font-weight: bold; color: black;">
+                        How can I contact the property owner?
+                    </button>
+                </h2>
+                <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        On the property details page, you can find the "Contact Owner" button. Clicking it will allow you to send a message or call the owner directly if a phone number is provided.
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Question 4: How to add a property -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq4">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4" style="font-weight: bold; color: black;">
+                        How do I list my property for sale or rent?
+                    </button>
+                </h2>
+                <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="faq4" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        After logging in as a property owner, navigate to the "Add Property" section. Fill in the required details, upload images, and submit your listing. Once approved, it will be visible to other users.
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Question 5: Trouble logging in -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq5">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5" style="font-weight: bold; color: black;">
+                        I’m having trouble logging in. What should I do?
+                    </button>
+                </h2>
+                <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="faq5" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Ensure that you are using the correct email and password. If you’ve forgotten your password, click the "Forgot Password?" link on the login page to reset it.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const buttons = document.querySelectorAll(".accordion-button");
+        
+            buttons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    const arrow = button.querySelector(".toggle-arrow");
+                    const collapse = document.querySelector(button.getAttribute("data-bs-target"));
+        
+                    // Toggle rotation based on collapse state
+                    arrow.style.transform = collapse.classList.contains("show")
+                        ? "rotate(0deg)"
+                        : "rotate(180deg)";
+                });
+            });
+        });
+        
+    </script>
+</div>
+{% endblock %}

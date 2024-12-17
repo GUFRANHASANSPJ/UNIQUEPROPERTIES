@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<body>
+    <style>
+        ul {
+            display: flex; /* Use flexbox to align items horizontally */
+            justify-content: center; /* Center items horizontally */
+            align-items: center; /* Center items vertically */
+            list-style-type: none; /* Remove bullet points */
+            padding: 0; /* Remove default padding */
+            margin: 0; /* Remove default margin */
+        }
+    
+        ul li {
+            margin: 0 7px; /* Add spacing between list items */
+            font-size: 1.0rem; /* Adjust font size */
+        }
+    
+        .num {
+            font-weight: bold; /* Make numeric values stand out */
+            margin-left: 5px; /* Add space between the icon and the number */
+        }
+    
+        i {
+            margin-right: 5px; /* Add space between the icon and text */
+        }
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 mt-4">
+                {% for i in property_detail %}
+                
+                <div class="fsec">
+                    <div class="anr" style="display: flex; justify-content: center; align-items: center; text-align: center; height: 100%; width: 100%; position: relative;">
+                        <b><h2>{{i.name}}</h2></b>
+                        <div style="position: absolute; top: 10px; right: 10px;">
+                            <p>Posted On: <span>{{ i.posted_date|date:"d M Y" }}</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="flx">
+                        <div class="price fx">
+                            <span>$</span>
+                            {{i.property_price}}
+                        </div>   
+                    </div>
+
+                    <div class="address mt-2">
+                        <p>{{i.proprty_info}} Flat {{i.area}} Sq-ft For Rent in {{i.address}}, <a href="#"> {{i.city}}</a> 
+                    </div>
+
+                    <!-- gallery -->
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    {% for j in i.images %}
+                                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                        {% if j %}
+                                        <img src="{{ j }}" class="d-block w-100 carousel-image" alt="Property image">
+                                        {% else %}
+                                        <p>No image available</p>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            
+                                <!-- Carousel Controls -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                                             
+                            <!-- Rating Section Below the Image -->
+                            <div class="rating-section mt-2" style="text-align: center;">
+                                {% if i.p_rating|default:0 > 0 %}
+                                    <!-- Display Stars based on Decimal Rating -->
+                                    <div style="color: #ffc107; font-size: 1.5rem;">
+                                        {% for star in "12345" %}
+                                            {% if forloop.counter <= i.p_rating %}
+                                                <!-- Full Star (Yellow) -->
+                                                <i class="fas fa-star" style="color: #ffc107;"></i>
+                                            {% elif forloop.counter <= i.p_rating|add:0.5 %}
+                                                <!-- Half Star (Yellow) -->
+                                                <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                            {% else %}
+                                                <!-- Empty Star (Gray) -->
+                                                <i class="far fa-star" style="color: #d3d3d3;"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <p>Rating: <span class="ms-1">{{ i.p_rating|floatformat:1 }}</span></p>
+                                {% else %}
+                                    <!-- No rating displayed -->
+                                    <p>No ratings yet</p>
+                                {% endif %}
+                            </div>
+                            
+
+                        </div>
+                        
+                        <div class="col-sm-8">
+                            <div class="imgrightside">
+                                <div class="info">
+                                    <ul>
+                                        <li><i class="fa-solid fa-bed"></i><span class="num">{{ i.bed }}</span> Beds <span class="m-3">|</span></li>
+                                        <li><i class="fa-solid fa-bath"></i><span class="num">{{ i.bath }}</span> Baths <span class="m-3">|</span></li>
+                                    </ul>
+                                </div>
+
+                                <div class="grd">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <b><span>Super Build up area</span></b>
+                                                <div class="area"><a href="#">{{i.area}}sqft</a></div>
+                                                
+                                            </td>
+                                            <td>
+                                                <b><span>Age of Building</span></b>
+                                                <div class="area"><a href="#">{{i.age}}Years</a></div>
+                                                <!-- <div class="aprice"><a href="#">n</a></div> -->
+                                            </td>
+                                            <td>
+                                                <b><span>Parking</span></b>
+                                                <div class="area"><a href="#">{{i.parking}}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b><span>Facing</span></b>
+                                                <div class="area"><a href="#">{{i.facing}}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            
+                                            <td>
+                                                <b><span>Pet friendly</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.pet_friendly %}Yes{% else %}No{% endif %}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            <td>
+                                                <b><span>Sunlight Access</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.sunlight_access %}Yes{% else %}No{% endif %}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b><span>Water Drainage</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.water_drainage %}Yes{% else %}No{% endif %}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            <td>
+                                                <b><span>Garden</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.garden %}Yes{% else %}No{% endif %}</a></div>
+                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                            </td>
+                                            <td>
+                                                <b><span>Proprty Status</span></b>
+                                                <div class="area"><a href="#"></a>{% if i.proprty_status %}Available{% else %}Not Available{% endif %}</a></div>
+                                            </td>
+                                            
+                                            <tr>
+                                                <td>
+                                                    <b><span>For Family</span></b>
+                                                    <div class="area"><a href="#"></a>{% if i.for_family %}Yes{% else %}No{% endif %}</a></div>
+                                                </td>
+                                                <td>
+                                                    <b><span>For Business</span></b>
+                                                    <div class="area"><a href="#"></a>{% if i.for_business %}Yes{% else %}No{% endif %}</a></div>
+                                                </td>
+                                                <td>
+                                                    <b><span>No of floors</span></b>
+                                                    <div class="area"><a href="#">{{i.No_of_floors}}</a></div>
+                                                    <!-- <div class="aprice"><a href="#">n</a></div> -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b><span>Furnish Detail</span></b>
+                                                    <div class="area"><a href="#">{{i.furnish_detail}}</a></div>
+                                                    
+                                                </td> 
+                                                <td>
+                                                    <b><span>Lift</span></b>
+                                                    <div class="area"><a href="#"></a>{% if i.Lifts %}Yes{% else %}No{% endif %}</a></div>
+                                                    
+                                                </td> 
+                                                <td>
+                                                    <b><span>Road Side Parking</span></b>
+                                                    <div class="area"><a href="#"></a>{% if i.road_side_parking %}Yes{% else %}No{% endif %}</a></div>
+                                                    
+                                                </td> 
+                                            </tr>
+                                            <td>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <table>
+                    <div class="rentd mt-4 mb-4">
+                        <td>
+                            <p class="tdbold">Description:</p>
+                        </td>
+                        <td >
+                            <p >{{i.description}} </p>
+                            
+                        </td>
+                    </div>
+                
+                
+                    </table>
+                    
+                </div>
+                   
+                {% endfor %}
+                 
+                </div>
+            </div>
+
+            <!-- 2nd row starts -->
+            <div class="col-sm-3 mt-4" style="position: absolute; top: 80px; right: 20px;">
+                <div class="ssec">
+                    {% for i in owner_details %}
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+                            {% if i.owner_image %}
+                                <img src="{{ i.owner_image.url }}" alt="Owner Image" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 10px;">
+                                    <p class="m-0">No Image</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+            
+                    <!-- Other details below -->
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px 15px;">
+                        <div class="owner">
+                            <h5 style="margin-bottom: 5px;">Owner Details</h5>
+                            {% for i in owner_details_auth %}
+                                <h6 style="margin: 5px 0;">Name: <span class="phn">{{ i.first_name }} {{ i.last_name }}</span></h6>
+                            {% endfor %}
+                            <h6 style="margin: 5px 0;">Phone: <span class="phn">+91 9243XXXX2</span></h6>
+                        </div>
+                    </div>
+            
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 10px;">
+                        {% for i in property_detail %}
+                            {% if request.user.userprofile.user_type == 'regular' %}
+                                <div style="width: 100%; max-width: 400px;">
+                                    <a href="{% url 'buying_property' i.id %}" class="btn btn-success w-100">Contact</a>
+                                </div>
+                                <div style="width: 100%; max-width: 400px;">
+                                    {% if i.id not in wishlist_items %}
+                                        <a href="{% url 'add_to_wishlist' i.id %}" class="btn btn-outline-success w-100">Add to Wishlist</a>
+                                    {% else %}
+                                        <a href="{% url 'remove_from_wishlist' i.id %}" class="btn btn-outline-danger w-100">Remove from Wishlist</a>
+                                    {% endif %}
+                                </div>
+                                <div style="width: 100%; max-width: 400px;">
+                                    {% if not has_subscription %}
+                                        <a href="{% url 'create_subscription' %}" class="btn btn-info w-100">Get Property Details</a>
+                                    {% else %}
+                                        <a href="{% url 'property_details_subscription' i.id %}" class="btn btn-success w-100">Get Property Details</a>
+                                    {% endif %}
+                                </div>
+                            {% elif request.user.property_owner.user_type == 'owner' %}
+                                {% if i.owners.id == request.user.id %}
+                                    <div style="width: 100%; max-width: 400px;">
+                                        <a href="{% url 'property_details_subscription' i.id %}" class="btn btn-success w-100">Get Property Details</a>
+                                    </div>
+                                    <div style="width: 100%; max-width: 200px;">
+                                        <a href="{% url 'edit_property' i.id %}" class="btn btn-success w-100">Edit Property Details</a>
+                                    </div>
+
+                                {% endif %}
+                            {% else %}
+                            <div style="width: 100%; max-width: 400px;">  
+                                <a href="{% url 'login' %}" class="btn btn-info w-100">Get Property Details</a>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>     
+        </div>
+    </div>
+<!-- Top Visited Properties Section -->
+<div class="top-visited-properties mt-5">
+    <h2 class="text-center mb-4">Similar Homes You May Like</h2>
+    <div class="row justify-content-center">
+        {% for property in similar_properties %}
+            <div class="col-md-4 col-sm-7 col-lg-2 mb-5">
+                <div class="card shadow-sm" style="max-width: 300px;">
+                    <a href="{% url 'property_details' property.id %}">
+                    {% if property.image%}
+                    <img src="{{ property.image.url }}" class="card-img-top" alt="Property Image" style="height: 150px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success">{{ property.name }}</h5>
+                        <p class="card-text mb-1"><i class="fas fa-map-marker-alt"></i> {{ property.address }}</p>
+                        <p class="card-text mb-2"><strong>${{ property.property_price }}</strong></p>
+                        <a href="{% url 'property_details' property.id %}" class="btn btn-outline-success btn-sm w-100">View Details</a>
+                    </div>
+                </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Adjust the carousel container */
+    #propertyCarousel {
+        width: 100%; /* Make carousel width 100% of the container */
+        max-width: 700px; /* Optional: limit the maximum width */
+        margin: 0 auto; /* Center the carousel */
+    }
+
+    /* Adjust images inside the carousel */
+    .carousel-item img {
+        width: 100%; /* Make the image width 100% of the carousel container */
+        height: 500px; /* Set a fixed height for the images */
+        object-fit: cover; /* Ensure the image fills the area while maintaining aspect ratio */
+        display: block; /* Ensure the image takes up the full area */
+    }
+
+    .heading-top {
+        margin-top: 10px; /* Adjust this value to position the heading */
+    }
+</style>
+
+<h1 class="text-center heading-top">{{ property_detail.name }}</h1>
+
+<div class="container mt-5">
+    <!-- Bootstrap Carousel -->
+    <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for image in property_detail.images %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ image }}" class="d-block w-100" alt="Property Image">
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+
+{% endblock %}

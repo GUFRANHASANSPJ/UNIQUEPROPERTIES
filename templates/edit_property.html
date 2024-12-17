@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    form {
+        margin: 20px; /* Add padding around the form */
+        padding: 20px; /* Add padding inside the form */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    fieldset {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    legend {
+        font-weight: bold;
+        padding: 0 10px;
+        color: #333;
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap; /* Allow wrapping to the next line */
+        margin-bottom: 15px;
+    }
+
+    .form-field {
+        flex: 1 1 calc(25% - 20px); /* 25% width minus margin */
+        margin: 10px;
+        box-sizing: border-box; /* Include padding and border in width */
+    }
+
+    input[type="file"] {
+        margin: 10px 0;
+    }
+
+    button[type="submit"] {
+        width: 300px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- General Information -->
+    <fieldset>
+        <legend>General Information</legend>
+        <div class="form-row">
+            <div class="form-field">{{ form.post_type.label_tag }} {{ form.post_type }}</div>
+            <div class="form-field">{{ form.property_type.label_tag }} {{ form.property_type }}</div>
+            <div class="form-field">{{ form.name.label_tag }} {{ form.name }}</div>
+            <div class="form-field">{{ form.Building_Age.label_tag }} {{ form.Building_Age }}</div>
+            <div class="form-field">{{ form.property_price.label_tag }} {{ form.property_price }}</div>
+            <div class="form-field">{{ form.length.label_tag }} {{ form.length }}</div>
+            <div class="form-field">{{ form.breadth.label_tag }} {{ form.breadth }}</div>
+            <div class="form-field">{{ form.area.label_tag }} {{ form.area }}</div>
+            <!-- Add more general fields -->
+        </div>
+    </fieldset>
+
+    <!-- Address -->
+    <fieldset>
+        <legend>Address</legend>
+        <div class="form-row">
+            <div class="form-field">{{ form.country.label_tag }} {{ form.country }}</div>
+            <div class="form-field">{{ form.state.label_tag }} {{ form.state }}</div>
+            <div class="form-field">{{ form.city.label_tag }} {{ form.city }}</div>
+            <div class="form-field">{{ form.county.label_tag }} {{ form.county }}</div>
+            <div class="form-field">{{ form.address.label_tag }} {{ form.address }}</div>
+        </div>
+    </fieldset>
+
+    <!-- Basic Information Of Property -->
+    <fieldset>
+        <legend>Basic Information Of Property</legend>
+        <div class="form-row">
+            <div class="form-field">Property Info :  {{ form.proprty_info }}</div>
+            <div class="form-field">Property Status : {{ form.proprty_status }}</div>
+            <div class="form-field">{{ form.No_of_floors.label_tag }} {{ form.No_of_floors }}</div>
+            <div class="form-field">{{ form.for_family.label_tag }} {{ form.for_family }}</div>
+            <div class="form-field">{{ form.for_business.label_tag }} {{ form.for_business }}</div>
+            <div class="form-field">{{ form.pet_friendly.label_tag }} {{ form.pet_friendly }}</div>
+            <div class="form-field">{{ form.parking.label_tag }} {{ form.parking }}</div>
+            <div class="form-field">{{ form.facing.label_tag }} {{ form.facing }}</div>
+            <div class="form-field">{{ form.furnish_detail.label_tag }} {{ form.furnish_detail }}</div>
+            <div class="form-field">{{ form.garden.label_tag }} {{ form.garden }}</div>
+            <div class="form-field">{{ form.sunlight_access.label_tag }} {{ form.sunlight_access }}</div>
+            <div class="form-field">{{ form.road_side_parking.label_tag }} {{ form.road_side_parking }}</div>
+            <div class="form-field">{{ form.water_drainage.label_tag }} {{ form.water_drainage }}</div>
+            <div class="form-field">{{ form.bed.label_tag }} {{ form.bed }}</div>
+            <div class="form-field">{{ form.bath.label_tag }} {{ form.bath }}</div>
+            <div class="form-field">{{ form.Adjacent_Roads.label_tag }} {{ form.Adjacent_Roads }}</div>
+            <div class="form-field d-flex justify-content-between align-items-center mb-3">
+                <label class="form-label me-3" for="id_description"><b>Property Descriptions</b></label>
+                {{ form.description }}
+            </div>
+        </div>
+    </fieldset>
+
+     <!-- Property_Features -->
+     <fieldset>
+        <legend>Property Features</legend>
+        <div class="form-row">
+            <div class="form-field"> Balcony:  {{ form.balcony }}</div>
+            <div class="form-field">Basement: {{ form.basement }}</div>
+            <div class="form-field">Roof Condition: {{ form.roof_condition }}</div>
+            <div class="form-field">Window Type :{{ form.window }}</div>
+            <div class="form-field">{{ form.flooring.label_tag }} {{ form.flooring }}</div>
+            <div class="form-field">Ceiling Condition: {{ form.ceiling_condition }}</div>
+            <div class="form-field">Property Features Descriptions {{ form.Property_Features_descriptions }}</div>
+        </div>
+    </fieldset>
+
+     <!-- Environmental Factors -->
+     <fieldset>
+        <legend>Environmental Factors</legend>
+        <div class="form-row">
+            <div class="form-field"> Air Pollution Levels:   {{ form.air_Pollution_Levels }}</div>
+            <div class="form-field">Noise Pollution:  {{ form.Noise_Pollution }}</div>
+            <div class="form-field">Roof Condition: {{ form.roof_condition }}</div>
+            <div class="form-field">Flood Zone : {{ form.Flood_Zone }}</div>
+            <div class="form-field">Earthquake Zone:  {{ form.Earthquake_zone }}</div>
+            <div class="form-field">Environmental Factors Descriptions : {{ form.Property_Features_descriptions }}</div>
+        </div>
+    </fieldset>
+
+    <!-- Accessibility -->
+    <fieldset>
+        <legend>Accessibility</legend>
+        <div class="form-row">
+            <div class="form-field">Public Transportation: {{ form.public_transportation }}</div>
+            <div class="form-field">Handicap Accessibility: {{ form.handicap_accesibility }}</div>
+            <div class="form-field">Proximity to Airport: {{ form.proximity_to_airport }}</div>
+            <div class="form-field">Road Quality: {{ form.road_quality }}</div>
+            <div class="form-field">Accessibility Descriptions: {{ form.Accessebility_descriptions }}</div>
+        </div>
+    </fieldset>
+
+    <!-- Safety and security -->
+    <fieldset>
+        <legend>Safety and Security</legend>
+        <div class="form-row">
+            <div class="form-field">Neighborhood Crime Rate: {{ form.Neighborhood_Crime_Rate }}</div>
+            <div class="form-field">Police Station Proximity: {{ form.Police_Station_Proximity }}</div>
+            <div class="form-field">Fire Station Proximity: {{ form.Fire_Station_Proximity }}</div>
+            <div class="form-field">Security Features: {{ form.Security_Features }}</div>
+            <div class="form-field">Safety and Security Descriptions: {{ form.Safety_security_descriptions }}</div>
+        </div>
+    </fieldset>
+    
+
+    <!-- Technology and Connectivity -->
+    <fieldset>
+        <legend>Technology and Connectivity</legend>
+        <div class="form-row">
+            <div class="form-field">Internet Speed: {{ form.Internet_Speed }}</div>
+            <div class="form-field">Cell Network Coverage: {{ form.Cell_Network_Coverage }}</div>
+            <div class="form-field">Electric Vehicle Charging: {{ form.Electric_Vehicle_Charging }}</div>
+            <div class="form-field">Smart Home Features: {{ form.Smart_Home_Features }}</div>
+            <div class="form-field">Technology and Connectivity Descriptions: {{ form.Technoly_connectivity_descriptions }}</div>
+        </div>
+    </fieldset>
+    
+
+    <!-- Community and Social Life -->
+    <fieldset>
+        <legend>Community and Social Life</legend>
+        <div class="form-row">
+            <div class="form-field">Community Events: {{ form.Community_Events }}</div>
+            <div class="form-field">Neighborhood Vibe: {{ form.Neighborhood_Vibe }}</div>
+            <div class="form-field">Social Clubs and Groups: {{ form.Social_Clubs_and_Groups }}</div>
+            <div class="form-field">Community Descriptions: {{ form.community_descriptions }}</div>
+        </div>
+    </fieldset>
+    
+
+    <!-- Green Spaces and Outdoors -->
+    <fieldset>
+        <legend>Green Spaces and Outdoors</legend>
+        <div class="form-row">
+            <div class="form-field">Proximity to Parks: {{ form.Proximity_to_Parks }}</div>
+            <div class="form-field">Gardens and Greenery: {{ form.Gardens_Greenery }}</div>
+            <div class="form-field">Pet Friendly Areas: {{ form.Pet_Friendly_Areas }}</div>
+            <div class="form-field">Green Spaces and Outdoor Descriptions: {{ form.greenspaces_and_outdoor_descriptions }}</div>
+        </div>
+    </fieldset>
+    
+
+    <!-- Education and Child Care-->
+    <fieldset>
+        <legend>Education and Child Care</legend>
+        <div class="form-row">
+            <div class="form-field">Schools Nearby: {{ form.Schools_Nearby }}</div>
+            <div class="form-field">Childcare Centers: {{ form.Childcare_Centers }}</div>
+            <div class="form-field">Playgrounds: {{ form.Playgrounds }}</div>
+            <div class="form-field">Education Descriptions: {{ form.Education_descriptions }}</div>
+        </div>
+    </fieldset>
+    
+
+    <!-- Utility and Service Quality -->
+    <fieldset>
+        <legend>Utility and Service Quality</legend>
+        <div class="form-row">
+            <div class="form-field">Electricity Reliability: {{ form.Electricity_Reliability }}</div>
+            <div class="form-field">Water Supply Quality: {{ form.Water_Supply_Quality }}</div>
+            <div class="form-field">Waste Collection: {{ form.Waste_Collection }}</div>
+            <div class="form-field">Utility and Service Quality Descriptions: {{ form.Utility_and_Service_Quality_descriptions }}</div>
+        </div>
+    </fieldset>
+
+     <!-- Nearby Employment Centers -->
+     <fieldset>
+        <legend>Nearby Employment Centers</legend>
+        <div class="form-row">
+            <div class="form-field">Business District Proximity: {{ form.Business_District_Proximity }}</div>
+            <div class="form-field">Industrial Areas: {{ form.Industrial_Areas }}</div>
+            <div class="form-field">Descriptions: {{ form.Nearby_Employment_Centers_descriptions }}</div>
+        </div>
+    </fieldset>
+
+    <!-- Transportation and Commute -->
+    <fieldset>
+        <legend>Transportation and Commute</legend>
+        <div class="form-row">
+            <div class="form-field">Major Highways Access: {{ form.Major_Highways_Access }}</div>
+            <div class="form-field">Commute Time to Downtown: {{ form.Commute_Time_to_Downtown }}</div>
+            <div class="form-field">Descriptions: {{ form.Transportation_and_Commute_descriptions }}</div>
+        </div>
+    </fieldset>
+
+    <!-- Special Features -->
+    <fieldset>
+        <legend>Special Features</legend>
+        <div class="form-row">
+            <div class="form-field">Historical Building Status: {{ form.Historical_Building_Status }}</div>
+            <div class="form-field">Cultural Heritage Sites: {{ form.Cultural_Heritage_Sites }}</div>
+            <div class="form-field">Luxury Amenities: {{ form.Luxury_Amenities }}</div>
+            <div class="form-field">Descriptions: {{ form.Special_Features_descriptions }}</div>
+        </div>
+    </fieldset>
+
+    <!-- Community Support Services -->
+    <fieldset>
+        <legend>Community Support Services</legend>
+        <div class="form-row">
+            <div class="form-field">Food Banks: {{ form.Food_Banks }}</div>
+            <div class="form-field">Community Centers: {{ form.Community_Centers }}</div>
+            <div class="form-field">Descriptions: {{ form.Community_Support_Services_descriptions }}</div>
+        </div>
+    </fieldset>
+
+    <!-- Weather-Related Factors -->
+    <fieldset>
+        <legend>Weather-Related Factors</legend>
+        <div class="form-row">
+            <div class="form-field">Average Annual Rainfall: {{ form.Average_Annual_Rainfall }}</div>
+            <div class="form-field">Snowfall: {{ form.Snowfall }}</div>
+            <div class="form-field">Descriptions: {{ form.Weather_Related_Factors_descriptions }}</div>
+        </div>
+    </fieldset>
+
+    <!-- Parking and Transportation -->
+    <fieldset>
+        <legend>Parking and Transportation</legend>
+        <div class="form-row">
+            <div class="form-field">Assigned Parking: {{ form.Assigned_Parking }}</div>
+            <div class="form-field">Bicycle Parking: {{ form.Bicycle_Parking }}</div>
+            <div class="form-field">Descriptions: {{ form.Parking_and_Transportation_descriptions }}</div>
+        </div>
+    </fieldset>
+    
+    <!-- Images -->
+    <fieldset>
+        <legend>Images</legend>
+        <!-- Image Upload Row -->
+        <label for="images">Upload Images:</label>
+        <input type="file" name="images" multiple>
+    </fieldset>
+
+
+    <fieldset>
+            <!-- Map Picker -->
+            <div id="map" style="height: 600px; width: 100%;"></div>
+            <!-- Hidden Inputs to Store Latitude and Longitude -->
+            <input type="hidden" id="id_lat" name="lat" value="{{ form.lat.value|default:'' }}">
+            <input type="hidden" id="id_lng" name="lng" value="{{ form.lng.value|default:'' }}">
+    </fieldset>
+        <script>
+            function initMap() {
+                // Default center for the map (e.g., New York)
+                const defaultLocation = { lat: 40.7128, lng: -74.0060 };
+                
+                // Initialize map
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: defaultLocation,
+                    zoom: 13
+                });
+        
+                // Marker for selected location
+                let marker = new google.maps.Marker({
+                    position: defaultLocation,
+                    map: map,
+                    draggable: true
+                });
+        
+                // Update hidden inputs on marker drag
+                google.maps.event.addListener(marker, 'dragend', function (event) {
+                    document.getElementById('id_lat').value = event.latLng.lat();
+                    document.getElementById('id_lng').value = event.latLng.lng();
+                });
+        
+                // On map click, move the marker and update inputs
+                map.addListener('click', function (event) {
+                    const clickedLocation = event.latLng;
+                    marker.setPosition(clickedLocation);
+                    document.getElementById('id_lat').value = clickedLocation.lat();
+                    document.getElementById('id_lng').value = clickedLocation.lng();
+                });
+            }
+            // Initialize map on page load
+            window.onload = initMap;
+                </script>
+                <script src="https://maps.gomaps.pro/maps/api/js?key=AlzaSy-OIuA0NEQEdVKNSZ3Kx1LFx4ZEZ0HltMg"></script>
+
+    <button type="submit">Save Property</button>
+</div>
+{% endblock %}

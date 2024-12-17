@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<div class="container position-relative">
+    <!-- Page Title -->
+    <h1 class="text-center">BUYING PROPERTIES LIST</h1>
+
+    <!-- Sorting Controls (Top-Right) -->
+    <div style="position: absolute; top: 1px; right: 0px;">
+        <form method="get" class="d-flex align-items-center">
+            <label for="sort" class="me-2">Sort:</label>
+
+            <!-- Sort by Price or Date -->
+            <select name="sort" id="sort" class="form-select me-2">
+                <option value="price" {% if sort_by == "price" %}selected{% endif %}>Price</option>
+                <option value="date" {% if sort_by == "date" %}selected{% endif %}>Posted Date</option>
+            </select>
+
+            <!-- Ascending or Descending Order -->
+            <select name="order" id="order" class="form-select me-2">
+                <option value="asc" {% if sort_order == "asc" %}selected{% endif %}>Ascending</option>
+                <option value="desc" {% if sort_order == "desc" %}selected{% endif %}>Descending</option>
+            </select>
+
+            <button type="submit" class="btn btn-success">Sort</button>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="container" style="padding-top: 50px; padding-left: 120px;">
+    <form method="GET" action="{% url 'property_search' %}" class="input-group mt-6" style="max-width: 100%; display: flex; 
+    flex-wrap: wrap; align-items: center; gap: 7px;">
+
+        <!-- Search by City -->
+        <input type="text" name="q" id="citySearch" class="form-control"  placeholder="Select City" value="{{ request.GET.q }}" 
+        oninput="fetchCitySuggestions(this.value)" autocomplete="off" style="flex-grow: 1;">
+        <!-- Suggestions Dropdown -->
+        <div id="citySuggestions" class="suggestions-dropdown"></div>
+
+        <!-- Property Type Dropdown -->
+        <select name="property_type" class="form-control">
+            <option value="">Property Type</option>
+            <option value="Rent" {% if request.GET.property_type == "Rent" %}selected{% endif %}>Rent</option>
+            <option value="Sell" {% if request.GET.property_type == "Sell" %}selected{% endif %}>Buy</option>
+        </select>
+
+        <!-- Price Inputs -->
+        <input type="number" name="min_price" class="form-control" placeholder="Min Price" value="{{ request.GET.min_price }}">
+        <input type="number" name="max_price" class="form-control" placeholder="Max Price" value="{{ request.GET.max_price }}">
+
+        <!-- Property Info Dropdown -->
+        <select name="property_info" class="form-control">
+            <option value="">Property Info</option>
+            <option value="1BHK" {% if request.GET.property_info == "1BHK" %}selected{% endif %}>1BHK</option>
+            <option value="2BHK" {% if request.GET.property_info == "2BHK" %}selected{% endif %}>2BHK</option>
+            <option value="3BHK" {% if request.GET.property_info == "3BHK" %}selected{% endif %}>3BHK</option>
+            <option value="4BHK" {% if request.GET.property_info == "4BHK" %}selected{% endif %}>4BHK</option>
+        </select>
+
+        <!-- Pet Friendly Dropdown -->
+        <select name="pet_friendly" class="form-control" style="min-width: 90px;">
+            <option value="">Pet Friendly</option>
+            <option value="true" {% if request.GET.pet_friendly == "true" %}selected{% endif %}>Yes</option>
+            <option value="false" {% if request.GET.pet_friendly == "false" %}selected{% endif %}>No</option>
+        </select>
+
+        <!-- Search Button -->
+        <button type="submit" class="btn btn-success" style="min-width: 90px; border-radius: 10px;">Filter</button>
+
+        <!-- Properties Near Me Button -->
+        <button type="button" class="btn btn-success" id="near-me-btn" style="min-width: 140px;border-radius: 10px;">Properties Near Me</button>
+
+    </form>
+
+    <!-- Link to Recommended Properties Page -->
+    <a href="{% url 'recommended_property' %}" class="btn btn-primary mt-3" style="min-width: 180px; border-radius: 10px; text-align: center;">Recommended Properties</a>
+</div>
+
+
+
+<br><br>
+<div class="container">
+    <div class="jumbotron">
+        <div class="row" style="margin-left: 6rem;">
+            {% for i in page_obj %}
+                <div class="col-md-4 d-flex align-items-stretch mb-4">
+                    <div class="card h-100 position-relative" style="width: 18rem;">
+                        <!-- Wishlist Icon -->
+                        <div class="position-absolute top-0 end-0 m-2">
+                            {% if i.id not in wishlist_items %}
+                                <a href="{% url 'add_to_wishlist' i.id %}" class="text-decoration-none text-danger">
+                                    <i class="far fa-heart fa-lg"></i>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'remove_from_wishlist' i.id %}" class="text-decoration-none text-danger">
+                                    <i class="fas fa-heart fa-lg"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Property Image -->
+                        {% if i.images %}
+                            <a href="{% url 'property_details' i.id %}">
+                                <img src="{{ i.images.0 }}" class="card-img-top" alt="Property Image" style="height: 200px; object-fit: cover;">
+                            </a>
+                        {% else %}
+                            <p>No image available</p>
+                        {% endif %}
+                        
+                        <!-- Rating Icon -->
+                        <div class="position-absolute top-0 start-0 m-2 d-flex align-items-center" style="background-color: #fff9c4; border-radius: 5px; padding: 4px 8px;">
+                            <i class="fas fa-star text-warning"></i>
+                            <span class="ms-1">{{ i.rating|default:"0.0"|floatformat:1 }}</span>
+                        </div>
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title d-flex justify-content-between align-items-center">
+                                <!-- Property Name -->
+                                <a href="{% url 'property_details' i.id %}" class="text-dark text-decoration-none">
+                                    {{ i.name }}
+                                </a>
+                                
+                                <!-- Property Price -->
+                                <span class="text-success fw-bold">
+                                    ${{ i.property_price|floatformat:0 }} <!-- Formats the price without decimal places -->
+                                </span>
+                            </h5>
+                            
+                            <p class="card-text">
+                                <!-- Icons for BHK, Bath, Bed -->
+                                <div class="d-flex justify-content-between">
+                                    <!-- BHK (1BHK) -->
+                                    
+                                    <!-- Bath -->
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-bath ms-2 me-2"></i> <!-- Added me-2 for margin after icon -->
+                                        <span>{{ i.bath }} </span>
+                                    </div>
+                                    
+                                    <!-- Bed -->
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-bed ms-2 me-2"></i> <!-- Added me-2 for margin after icon -->
+                                        <span>{{ i.bed }} </span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-square ms-2 me-2"></i> <!-- Added me-2 for margin after icon -->
+                                        <span>{{ i.area }}</span> <!-- Assuming 'proprty_info' is the field for BHK -->
+                                    </div>
+                                </div>
+                            </p>
+                            
+                            <a class="btn btn-success mt-auto" href="{% url 'property_details' i.id %}">Get details</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    
+    
+        
+        <!-- Pagination Controls -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+{% endblock %}

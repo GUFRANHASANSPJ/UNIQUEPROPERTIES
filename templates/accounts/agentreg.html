@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="mb-4">Registration Form</h1>
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form1|crispy }}
+            {{ form2|crispy }}
+            <div class="text-center mt-3">
+                <input type="submit" class="btn btn-success" value="Submit">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

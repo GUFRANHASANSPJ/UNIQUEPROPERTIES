@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <h1>Search Results</h1>
+
+    <!-- Display a message if no query was made -->
+    <!-- {% if not query %}
+        <p>Please enter a search term.</p>
+    {% endif %} -->
+
+    <!-- Display a message if no properties were found -->
+    {% if query and not page_obj %}
+        <p>No properties found matching "{{ query }}".</p>
+    {% endif %}
+
+    <div class="container">
+        <div class="jumbotron">
+            <!-- Property Cards -->
+            <div class="row">
+                {% for i in page_obj %}
+                    <div class="col-md-4 d-flex align-items-stretch mb-4">
+                        <div class="card h-100 position-relative" style="width: 18rem;">
+                            <!-- Wishlist Icon -->
+                            <div class="position-absolute top-0 end-0 m-2">
+                                {% if i.id not in wishlist_items %}
+                                    <a href="{% url 'add_to_wishlist' i.id %}" class="text-decoration-none text-danger">
+                                        <i class="far fa-heart fa-lg"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'remove_from_wishlist' i.id %}" class="text-decoration-none text-danger">
+                                        <i class="fas fa-heart fa-lg"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Property Image -->
+                            {% if i.images %}
+                                <a href="{% url 'property_details' i.id %}">
+                                    <img src="{{ i.images.0 }}" class="card-img-top" alt="Property Image" style="height: 200px; object-fit: cover;">
+                                </a>
+                            {% else %}
+                                <p>No image available</p>
+                            {% endif %}
+                            
+                            <!-- Rating Icon -->
+                            <div class="position-absolute top-0 start-0 m-2 d-flex align-items-center" style="background-color: #fff9c4; border-radius: 5px; padding: 4px 8px;">
+                                <i class="fas fa-star text-warning"></i>
+                                <span class="ms-1">{{ i.rating|default:"0.0"|floatformat:1 }}</span>
+                            </div>
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title d-flex justify-content-between align-items-center">
+                                    <!-- Property Name -->
+                                    <a href="{% url 'property_details' i.id %}" class="text-dark text-decoration-none">
+                                        {{ i.name }}
+                                    </a>
+                                    
+                                    <!-- Property Price -->
+                                    <span class="text-success fw-bold">
+                                        {% if i.post_type == 'Rent'%}
+                                        ${{ i.property_price|floatformat:0 }}/m <!-- Formats the price without decimal places -->
+                                        {% else %}
+                                        ${{ i.property_price|floatformat:0 }}
+                                        {% endif %}
+                                    </span>
+                                </h5>
+                                
+                                <p class="card-text">
+                                    <!-- Icons for BHK, Bath, Bed -->
+                                    <div class="d-flex justify-content-between">
+                                        <!-- BHK (1BHK) -->
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-bed ms-2 me-2"></i> <!-- Added me-2 for margin after icon -->
+                                            <span>{{ i.proprty_info }}</span> <!-- Assuming 'proprty_info' is the field for BHK -->
+                                        </div>
+                            
+                                        <!-- Bath -->
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-bath ms-2 me-2"></i> <!-- Added me-2 for margin after icon -->
+                                            <span>{{ i.bath }} </span>
+                                        </div>
+                            
+                                        <!-- Bed -->
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-bed ms-2 me-2"></i> <!-- Added me-2 for margin after icon -->
+                                            <span>{{ i.bed }} </span>
+                                        </div>
+                                    </div>
+                                </p>
+                                
+                                <a class="btn btn-primary mt-auto" href="{% url 'property_details' i.id %}">Get details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+            
+            <!-- Pagination Controls -->
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <!-- First Page -->
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                    </a>
+                                </li>
+                                <!-- Previous Page -->
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <!-- Page Numbers -->
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <!-- Next Page -->
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                <!-- Last Page -->
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+
+
+        </div>
+    </div> 
+
+{% endblock %}

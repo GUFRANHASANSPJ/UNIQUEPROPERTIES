@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- User Profile Image -->
+            {% if OwnerDetails.owner_image %}
+                <img style="height: 200px; width:200px;" src="{{ OwnerDetails.owner_image.url }}" alt="Profile Picture" class="img-fluid rounded-circle">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <!-- User Details -->
+            <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+                <li class="list-group-item"><strong>Phone:</strong> {{ OwnerDetails.phone }}</li>
+                <li class="list-group-item"><strong>Address:</strong> {{ OwnerDetails.address }}</li>
+            </ul>
+            <br>
+            <!-- Edit Profile and Logout Buttons -->
+            <div class="d-flex">
+                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+                <a href="{% url 'edit_owner_details' %}" class="btn btn-primary ms-3">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Property List in Table Format -->
+    <h3 class="mt-5">Owned Properties</h3>
+
+    <!-- Add New Property Button -->
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'addnewproperty' %}" class="btn btn-success">Add New Property</a>
+    </div>
+
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th style="width: 22%;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for property in OwnerProperties %}
+                <tr>
+                    <td>{{ property.id }}</td>
+                    <td>{{ property.name }}</td>
+                    <td>{{ property.address }}</td>
+                    <td>
+                        <!-- View Button -->
+                        <a href="{% url 'property_details' property.id %}" class="btn btn-primary btn-sm me-3">View</a>
+                        <!-- Edit Button -->
+                        <a href="{% url 'edit_property' property.id %}" class="btn btn-warning btn-sm me-3">Edit</a>
+                        <!-- Delete Button -->
+                        <a href="{% url 'delete_property' property.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No properties found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+</div>
+
+{% endblock %}

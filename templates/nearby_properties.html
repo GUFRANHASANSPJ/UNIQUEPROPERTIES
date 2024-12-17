@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    <h2 class="text-center">Properties Near You</h2>
+    <br>
+    <div class="wishlist-container row">
+        {% for item in properties %}
+            <div class="wishlist-item col-md-3 col-sm-6 mb-4">
+                <div class="card shadow-sm h-100 position-relative" style="width: 90%; max-width: 200px; margin: auto;"> <!-- position-relative added -->
+
+                    <!-- Property Image -->
+                    {% if item.property.images %}
+                        <div class="image-container position-relative">
+                            <a href="{% url 'property_details' item.property.id %}">
+                                <img src="{{ item.property.images.0 }}" class="card-img-top" alt="{{ item.name }}" style="height: 150px; object-fit: cover;">
+                            </a>
+
+                            <!-- Distance Badge -->
+                            {% if item.distance %}
+                                <span class="badge bg-success text-white position-absolute" style="top: 10px; right: 10px; padding: 5px 10px; font-size: 12px;">
+                                    {{ item.distance }} km away
+                                </span>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">
+                            <p>No image available</p>
+                        </div>
+                    {% endif %}
+
+                    <!-- Property Details -->
+                    <div class="card-body text-center">
+                        <a href="{% url 'property_details' item.property.id %}">
+                            <h6 class="card-title text-success">{{ item.property.name }}</h6>
+                        </a>
+                        <p class="small">{{ item.property.address }}</p>
+                    </div>
+
+                    <!-- Buttons for Details -->
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{% url 'property_details' item.property.id %}" class="btn btn-outline-success btn-sm">Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-center mt-4">You have not contacted any property owners.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
