@@ -11,10 +11,13 @@ urlpatterns = [
     path('about/', views.about_us, name='about_us'),
     path('property_details/<int:id>/', views.property_details, name='property_details'),
     path('property_details_subscription/<int:id>/', views.property_details_Subscription, name='property_details_subscription'),
+    path('owner_property_details/<int:id>/', views.owner_property_details, name='owner_property_details'),
     path('allimages/<int:id>/', views.all_images, name='all_images'),
     path('search/', views.property_search, name='property_search'),
     path('addnewproperty/', views.AddNewProperty, name='addnewproperty'),
-    path('edit_property/<int:property_id>/', views.edit_property, name='edit_property'),
+    path('edit_property/<int:property_id>/', views.edit_property1, name='edit_property'),
+    # path('edit1/<int:property_id>/', views.edit_property1, name='edit1'),
+
     path('delete_property/<int:property_id>/', views.delete_property, name='delete_property'),
     path('buying_property/<int:id>/', views.Buying_Property, name='buying_property'),
     path('agent_details_for_users/<int:id>/', views.Agent_Details_For_users, name='agent_details_for_users'),
@@ -31,4 +34,16 @@ urlpatterns = [
     path('api/states/<int:country_id>/', views.get_states, name='get_states'),
     path('api/cities/<int:state_id>/', views.get_cities, name='get_cities'),
     path('api/pincodes/<int:city_id>/', views.get_pincodes, name='get_pincodes'),
+    path('api/counties/<int:city_id>/', views.get_counties, name='get_counties'),
+    path('api/addresses/<int:county_id>/', views.get_addresses, name='get_addresses'),
+
+    path('property/<int:property_id>/chat/', views.property_chat, name='property_chat'),
+
+    path('property/<int:property_id>/viewers/', views.property_viewers_for_owner, name='property_viewers'),
+
+    path('get-nearby-schools/', get_nearby_schools, name='get_nearby_schools'),
+    # path('get-air-pollution-levels/', views.get_air_pollution_levels, name='get_air_pollution_levels'),
+    path('get-nearby-info/', get_nearby_info, name='get_nearby_info'),
+
+    
 ]   +static (settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

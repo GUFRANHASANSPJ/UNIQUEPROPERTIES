@@ -1,16 +1,47 @@
 <!-- edit_user_details.html -->
 {% extends 'base.html' %}
+{% load crispy_forms_tags %} <!-- Load Crispy Forms template tag -->
 {% block content %}
-
-
-<div class="container mt-5">
-    <h2>Edit Profile</h2>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form1.as_p }}
-        {{ form2.as_p }}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
+<style>
+    .form-control {
+        max-width: 400px; /* Set the maximum width for input fields */
+        width: 100%; /* Ensure responsiveness */
+        padding-right: 40px; /* Leave space for the icon */
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+    .container {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        min-height: 40vh/* Full height of the viewport */
+    }
+    
+    /* Limit the size of the jumbotron */
+    .jumbotron {
+        background-color: #e5e2e0; /* Set your desired background color (Bootstrap primary color) */
+        color: #070000; /* Optional: White text color for better contrast */
+        padding: 2rem;
+        border-radius: 8px; /* Optional: Rounded corners */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
+        max-width: 750px; /* Limit the width */
+        width: 100%; /
+    }
+</style>
+<br>
+<div class="container">
+    <div class="jumbotron">
+        <h2 style="text-align: center;">Edit Profile</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form1|crispy }} <!-- Render form1 with Crispy -->
+            {{ form2|crispy }} <!-- Render form2 with Crispy -->
+            <br>
+            <button type="submit" class="btn" style="background-color: #4B3C31; border-radius: 5px; color:white">Save Changes</button>
+        </form>
+    </div>
 </div>
 <br>
+
 {% endblock %}

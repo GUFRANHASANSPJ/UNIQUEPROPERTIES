@@ -1,0 +1,18 @@
+    /* Adjust the carousel container */
+    #propertyCarousel {
+        width: 100%; /* Make carousel width 100% of the container */
+        max-width: 700px; /* Optional: limit the maximum width */
+        margin: 0 auto; /* Center the carousel */
+    }
+
+    /* Adjust images inside the carousel */
+    .carousel-item img {
+        width: 100%; /* Make the image width 100% of the carousel container */
+        height: 500px; /* Set a fixed height for the images */
+        object-fit: cover; /* Ensure the image fills the area while maintaining aspect ratio */
+        display: block; /* Ensure the image takes up the full area */
+    }
+
+    .heading-top {
+        margin-top: 10px; /* Adjust this value to position the heading */
+    }

@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
+
 <script src="https://maps.gomaps.pro/maps/api/js?key=AlzaSy-OIuA0NEQEdVKNSZ3Kx1LFx4ZEZ0HltMg"></script>
+<link rel="stylesheet" href="{% static 'css/property_details_subscription.css' %}">
+<style>
+    .margin {
+        margin-left: 10px;
+    }
+</style>
 
 <body>
     <div class="container">
@@ -27,7 +35,7 @@
                     </div>
 
                     <div class="address mt-2">
-                        <p>{{i.proprty_info}} Flat {{i.area}} Sq-ft For Rent in {{i.address}},{{i.county}} <a href="#"> {{i.city}}</a> </p>
+                        <p>{{i.bed}} Bed Flat  , {{i.area}} For Rent in {{i.address}},{{i.county}},{{i.zipcode}} <a href="#"> {{i.city}}</a> </p>
                     </div>
 
                     <!-- gallery -->
@@ -101,87 +109,186 @@
                                         <tr>
                                             <td>
                                                 <b><span>Super Build up area</span></b>
-                                                <div class="area"><a href="#">{{i.area}}sqft</a></div>
-                                                <div class="aprice"><a href="#">$ 31/sqft</a></div>
+                                                <div class="area">
+                                                    <a href="#">
+                                                        {{ i.area }}
+                                                        <i  class="fas fa-ruler-combined margin" style="margin-left: 10px;"></i>
+                                                    </a>
+                                                </div>
+                                                <!-- <div class="aprice"><a href="#">$ 31/sqft</a></div> -->
                                             </td>
                                             <td>
                                                 <b><span>Age of Building</span></b>
-                                                <div class="area"><a href="#">{{i.age}}years</a></div>
-                                                <!-- <div class="aprice"><a href="#">n</a></div> -->
+                                                <div class="area">
+                                                    {{ i.Building_Age }} years
+                                                    <a href="#">
+                                                        <i class="fas fa-calendar-alt margin" style="color: #36a15e ;"></i> 
+                                                    </a>
+                                                </div>
                                             </td>
+                                            
                                             <td>
                                                 <b><span>Parking</span></b>
-                                                <div class="area"><a href="#">{{i.parking}}</a></div>
-                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                                <div class="area">
+                                                    <a href="#">
+                                                        {{ i.parking }}
+                                                        <i class="fas fa-parking margin"></i>
+                                                    </a>
+                                                </div>
                                             </td>
+                                            
                                             
                                         </tr>
                                         <tr>
                                             <td>
                                                 <b><span>Facing</span></b>
-                                                <div class="area"><a href="#">{{i.facing}}</a></div>
-                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                                <div class="area">
+                                                    <a href="#">
+                                                        {{ i.facing }}
+                                                        <i class="fas fa-compass margin" style="color: #007BFF;"></i>
+                                                    </a>
+                                                </div>
                                             </td>
                                             
                                             <td>
-                                                <b><span>Pet friendly</span></b>
-                                                <div class="area"><a href="#"></a>{% if i.pet_friendly %}Yes{% else %}No{% endif %}</a></div>
-                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                                <b><span>Pet Friendly</span></b>
+                                                <div class="area">
+                                                    <a href="#">
+                                                        {% if i.pet_friendly %}
+                                                            Yes <i class="fas fa-paw margin"></i>
+                                                        {% else %}
+                                                            No <i class="fas fa-ban margin"></i>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
                                             </td>
+                                            
                                             <td>
                                                 <b><span>Sunlight Access</span></b>
-                                                <div class="area"><a href="#"></a>{% if i.sunlight_access %}Yes{% else %}No{% endif %}</a></div>
-                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                                <div class="area">
+                                                    <a href="#">
+                                                        {% if i.sunlight_access %}
+                                                            Yes <i class="fas fa-sun margin"></i>
+                                                        {% else %}
+                                                            No <i class="fas fa-cloud margin"></i>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
                                             </td>
+                                            
                                         </tr>
                                         <tr>
                                             <td>
                                                 <b><span>Water Drainage</span></b>
-                                                <div class="area"><a href="#"></a>{% if i.water_drainage %}Yes{% else %}No{% endif %}</a></div>
-                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                                <div class="area">
+                                                    <a href="#">
+                                                        {% if i.water_drainage %}
+                                                            Yes <i class="fas fa-water margin"></i>
+                                                        {% else %}
+                                                            No <i class="fas fa-ban margin"></i>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
                                             </td>
                                             <td>
                                                 <b><span>Garden</span></b>
-                                                <div class="area"><a href="#"></a>{% if i.garden %}Yes{% else %}No{% endif %}</a></div>
-                                                <!-- <div class="aprice"><a href="#">₹ 31/sqft</a></div> -->
+                                                <div class="area">
+                                                    <a href="#">
+                                                        {% if i.garden %}
+                                                            Yes <i class="fas fa-seedling margin"></i>
+                                                        {% else %}
+                                                            No <i class="fas fa-ban margin"></i>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
                                             </td>
+                                            
                                             <td>
-                                                <b><span>Proprty Status</span></b>
-                                                <div class="area"><a href="#"></a>{% if i.proprty_status %}Available{% else %}Not Available{% endif %}</a></div>
+                                                <b><span>Property Status</span></b>
+                                                <div class="area">
+                                                    <a href="#">
+                                                        {% if i.proprty_status %}
+                                                            Available <i class="fas fa-check-circle margin" style="color: green;"></i>
+                                                        {% else %}
+                                                            Not Available <i class="fas fa-times-circle margin" style="color: red;"></i>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
                                             </td>
+                                            
                                             
                                             <tr>
                                                 <td>
                                                     <b><span>For Family</span></b>
-                                                    <div class="area"><a href="#"></a>{% if i.for_family %}Yes{% else %}No{% endif %}</a></div>
+                                                    <div class="area">
+                                                        <a href="#">
+                                                            {% if i.for_family %}
+                                                                Yes <i class="fas fa-home margin" style="color: #007BFF;"></i>
+                                                            {% else %}
+                                                                No <i class="fas fa-ban margin" style="color: red;"></i>
+                                                            {% endif %}
+                                                        </a>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <b><span>For Business</span></b>
-                                                    <div class="area"><a href="#"></a>{% if i.for_business %}Yes{% else %}No{% endif %}</a></div>
+                                                    <div class="area">
+                                                        <a href="#">
+                                                            {% if i.for_business %}
+                                                                Yes <i class="fas fa-briefcase margin" style="color: #28a745;"></i>
+                                                            {% else %}
+                                                                No <i class="fas fa-ban margin" style="color: red;"></i>
+                                                            {% endif %}
+                                                        </a>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    <b><span>No of floors</span></b>
-                                                    <div class="area"><a href="#">{{i.No_of_floors}}</a></div>
-                                                    <!-- <div class="aprice"><a href="#">n</a></div> -->
+                                                    <b><span>No of Floors</span></b>
+                                                    <div class="area">
+                                                        <a href="#">
+                                                            {{ i.No_of_floors }}
+                                                            <i class="fas fa-building margin" style="color: #6c757d;"></i> 
+                                                        </a>
+                                                    </div>
                                                 </td>
                                             </tr>
+                                            
                                             <tr>
                                                 <td>
                                                     <b><span>Furnish Detail</span></b>
-                                                    <div class="area"><a href="#">{{i.furnish_detail}}</a></div>
-                                                    
-                                                </td> 
+                                                    <div class="area">
+                                                        <a href="#">
+                                                            {{ i.furnish_detail }}
+                                                            <i class="fas fa-couch margin" style="color: #6c757d;"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
                                                 <td>
                                                     <b><span>Lift</span></b>
-                                                    <div class="area"><a href="#"></a>{% if i.Lifts %}Yes{% else %}No{% endif %}</a></div>
-                                                    
-                                                </td> 
+                                                    <div class="area">
+                                                        <a href="#">
+                                                            {% if i.lift %}
+                                                                Yes <i class="fas fa-elevator margin" style="color: #007BFF;"></i>
+                                                            {% else %}
+                                                                No <i class="fas fa-ban margin" style="color: red;"></i>
+                                                            {% endif %}
+                                                        </a>
+                                                    </div>
+                                                </td>
                                                 <td>
                                                     <b><span>Road Side Parking</span></b>
-                                                    <div class="area"><a href="#"></a>{% if i.road_side_parking %}Yes{% else %}No{% endif %}</a></div>
-                                                    
-                                                </td> 
+                                                    <div class="area">
+                                                        <a href="#">
+                                                            {% if i.road_side_parking %}
+                                                                Yes <i class="fas fa-car margin" style="color: #28a745;"></i>
+                                                            {% else %}
+                                                                No <i class="fas fa-ban margin" style="color: red;"></i>
+                                                            {% endif %}
+                                                        </a>
+                                                    </div>
+                                                </td>
                                             </tr>
+                                            
                                             <td>
 
                                             </td>
@@ -241,13 +348,47 @@
                     <div class="rentd" >
                         <!-- Property Features Section -->
                         <div class="property-features">
-                            <h4>Property Features:</h4>
+                            <h4>
+                                Property Features: 
+                                <i class="fas fa-list" style="color: #007BFF; margin-left: 5px;"></i>
+                            </h4>
+                            
                             <ul>
-                                <li><span>&#8594;</span><strong>Balcony:</strong> {{ i.balcony }}</li>
-                                <li><span>&#8594;</span><strong>Basement</strong> {{ i.basement }}</li>
-                                <li><span>&#8594;</span><strong>Roof Condition:</strong> {{ i.roof_condition }}</li>
-                                <li><span>&#8594;</span><strong>Window:</strong> {{ i.window_type }}</li>
-                                <li><span>&#8594;</span><strong>Flooring:</strong> {{ i.floor_type }}</li>
+                                <li>
+                                    <span>&#8594;</span>
+                                    <strong>Balcony:</strong> 
+                                    {% if i.balcony %}
+                                        Yes <i class="fas fa-door-open" style="color: #007bff; margin-left: 15px;"></i> <!-- Balcony icon -->
+                                    {% else %}
+                                        No <i class="fas fa-door-open" style="color: #007bff; margin-left: 15px;"></i> <!-- Balcony icon -->
+                                    {% endif %}
+                                </li>                                                               
+                                <li>
+                                    <span>&#8594;</span>
+                                    <strong>Basement:</strong>
+                                    {% if i.basement %}
+                                        Yes <i class="fas fa-building margin" style="color: green;"></i>
+                                    {% else %}
+                                        No <i class="fas fa-building" style="color: red;"></i>
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    <span>&#8594;</span>
+                                    <strong>Roof Condition:</strong> 
+                                    {{ i.roof_condition }}
+                                    {% if i.roof_condition == "New" %}
+                                        <i class="fas fa-check-circle" style="color: green; margin-left: 5px;"></i>
+                                    {% elif i.roof_condition == "Old" %}
+                                        <i class="fas fa-exclamation-circle" style="color: orange; margin-left: 5px;"></i>
+                                    {% endif %}
+                                </li>                                
+                                <li>
+                                    <span>&#8594;</span>
+                                    <strong>Window:</strong> 
+                                    {{ i.window|join:", " }}
+                                    <i class="fas fa-window-maximize" style="color: #007bff; margin-left: 5px;"></i> <!-- Wind icon -->
+                                </li>
+                                <li><span>&#8594;</span><strong>Flooring:</strong> {{ i.flooring }}</li>
                                 <li><span>&#8594;</span><strong>Ceiling:</strong> {{ i.ceiling_condition }}</li>
                                 <li><span>&#8594;</span><strong>Property Features Description:</strong> {{ i.Property_Features_descriptions }}</li>
                             </ul>
@@ -255,7 +396,11 @@
                     
                         <!-- Environmental Factors Section -->
                         <div class="environmental-factors">
-                            <h4>Environmental Factors:</h4>
+                            <h4>
+                                Environmental Factors: 
+                                <i class="fas fa-leaf" style="color: green; margin-left: 5px;"></i>
+                            </h4>
+                            
                             <ul>
                                 <li><span>&#8594;</span><strong>Air Pollution Levels:</strong> {{ i.air_Pollution_Levels }}</li>
                                 <li><span>&#8594;</span><strong>Noise Pollution:</strong> {{ i.Noise_Pollution }}</li>
@@ -270,7 +415,10 @@
                     <div class="rentd">
                         <!-- Accessibility Factors -->
                         <div class="accessibility">
-                            <h4>Accessibility Factors:</h4>
+                            <h4>
+                                Accessibility Factors: 
+                                <i class="fas fa-wheelchair" style="color: #007BFF; margin-left: 5px;"></i>
+                            </h4>                            
                             <ul>
                                 <li><span>&#8594;</span><strong>Public Transportation:</strong> {{ i.public_transportation }}</li>
                                 <li><span>&#8594;</span><strong>Handicap Accessibility:</strong> {{ i.handicap_accesibility }}</li>
@@ -282,7 +430,10 @@
                         
                         <!-- Safety and Security -->
                         <div class="safety-security">
-                            <h4>Safety and Security:</h4>
+                            <h4>
+                                Safety and Security: 
+                                <i class="fas fa-shield-alt" style="color: #FF4500; margin-left: 5px;"></i>
+                            </h4>                            
                             <ul>
                                 <li><span>&#8594;</span><strong>Neighborhood Crime Rate:</strong> {{ i.Neighborhood_Crime_Rate }}</li>
                                 <li><span>&#8594;</span><strong>Police Station Proximity:</strong> {{ i.Police_Station_Proximity }}</li>
@@ -296,7 +447,10 @@
                     <div class="rentd">
                         <!-- Technology and Connectivity -->
                         <div class="technology-connectivity">
-                            <h4>Technology and Connectivity:</h4>
+                            <h4>
+                                Technology and Connectivity: 
+                                <i class="fas fa-wifi" style="color: #007BFF; margin-left: 5px;"></i>
+                            </h4>                            
                             <ul>
                                 <li><span>&#8594;</span><strong>Internet Speed:</strong> {{ i.Internet_Speed }}</li>
                                 <li><span>&#8594;</span><strong>Cell Network Coverage:</strong> {{ i.Cell_Network_Coverage }}</li>
@@ -308,7 +462,10 @@
                         
                         <!-- Community and Social Life -->
                         <div class="community-social-life">
-                            <h4>Community and Social Life:</h4>
+                            <h4>
+                                Community and Social Life: 
+                                <i class="fas fa-users" style="color: #28A745; margin-left: 5px;"></i>
+                            </h4>                            
                             <ul>
                                 <li><span>&#8594;</span><strong>Community Events:</strong> {{ i.Community_Events }}</li>
                                 <li><span>&#8594;</span><strong>Neighborhood Vibe:</strong> {{ i.Neighborhood_Vibe }}</li>
@@ -321,7 +478,10 @@
                     <div class="rentd">
                         <!-- Green Spaces and Outdoors -->
                         <div class="green-spaces">
-                            <h4>Green Spaces and Outdoors:</h4>
+                            <h4>
+                                Green Spaces and Outdoors: 
+                                <i class="fas fa-tree" style="color: #28A745; margin-left: 5px;"></i>
+                            </h4>                            
                             <ul>
                                 <li><span>&#8594;</span><strong>Proximity to Parks:</strong> {{ i.Proximity_to_Parks }}</li>
                                 <li><span>&#8594;</span><strong>Gardens and Greenery:</strong> {{ i.Gardens_Greenery }}</li>
@@ -332,7 +492,10 @@
                         
                         <!-- Education and Child Care -->
                         <div class="education-child-care">
-                            <h4>Education and Child Care:</h4>
+                            <h4>
+                                Education and Child Care: 
+                                <i class="fas fa-graduation-cap" style="color: #FFC107; margin-left: 5px;"></i>
+                            </h4>                            
                             <ul>
                                 <li><span>&#8594;</span><strong>Schools Nearby:</strong> {{ i.Schools_Nearby }}</li>
                                 <li><span>&#8594;</span><strong>Childcare Centers:</strong> {{ i.Childcare_Centers }}</li>
@@ -345,7 +508,10 @@
                     <div class="rentd">
                         <!-- Utility and Service Quality -->
                         <div class="utility-service-quality">
-                            <h4>Utility and Service Quality:</h4>
+                            <h4>
+                                Utility and Service Quality: 
+                                <i class="fas fa-wrench" style="color: #17A2B8; margin-left: 5px;"></i>
+                            </h4>
                             <ul>
                                 <li><span>&#8594;</span><strong>Electricity Reliability:</strong> {{ i.Electricity_Reliability }}</li>
                                 <li><span>&#8594;</span><strong>Water Supply Quality:</strong> {{ i.Water_Supply_Quality }}</li>
@@ -356,7 +522,10 @@
                         
                         <!-- Nearby Employment Centers -->
                         <div class="nearby-employment-centers">
-                            <h4>Nearby Employment Centers:</h4>
+                            <h4>
+                                Nearby Employment Centers: 
+                                <i class="fas fa-briefcase" style="color: #343A40; margin-left: 5px;"></i>
+                            </h4>
                             <ul>
                                 <li><span>&#8594;</span><strong>Business District Proximity:</strong> {{ i.Business_District_Proximity }}</li>
                                 <li><span>&#8594;</span><strong>Industrial Areas:</strong> {{ i.Industrial_Areas }}</li>
@@ -368,7 +537,10 @@
                     <div class="rentd">
                         <!-- Community Support Services -->
                         <div class="section">
-                            <h4>Community Support Services:</h4>
+                            <h4>
+                                Community Support Services: 
+                                <i class="fas fa-hands-helping" style="color: #28A745; margin-left: 5px;"></i>
+                            </h4>
                             <ul>
                                 <li><span>&#8594;</span><strong>Community Centers:</strong> {{ i.Community_Centers }}</li>
                                 <li><span>&#8594;</span><strong>Description:</strong> {{ i.Community_Support_Services_descriptions }}</li>
@@ -377,7 +549,10 @@
                     
                         <!-- Weather-Related Factors -->
                         <div class="section">
-                            <h4>Weather-Related Factors:</h4>
+                            <h4>
+                                Weather-Related Factors: 
+                                <i class="fas fa-cloud-sun" style="color: #FFD700; margin-left: 5px;"></i>
+                            </h4>
                             <ul>
                                 <li><span>&#8594;</span><strong>Average Annual Rainfall:</strong> {{ i.Average_Annual_Rainfall }}</li>
                                 <li><span>&#8594;</span><strong>Snowfall:</strong> {{ i.Snowfall }}</li>
@@ -389,7 +564,10 @@
                     <div class="rentd">
                         <!-- Special Features -->
                         <div class="section">
-                            <h4>Special Features:</h4>
+                            <h4>
+                                Special Features: 
+                                <i class="fas fa-star" style="color: #FFC107; margin-left: 5px;"></i>
+                            </h4>
                             <ul>
                                 <li><span>&#8594;</span><strong>Historical Building Status:</strong> {{ i.Historical_Building_Status }}</li>
                                 <li><span>&#8594;</span><strong>Cultural Heritage Sites:</strong> {{ i.Cultural_Heritage_Sites }}</li>
@@ -400,7 +578,10 @@
                     
                         <!-- Parking and Transportation -->
                         <div class="section">
-                            <h4>Parking and Transportation:</h4>
+                            <h4>
+                                Parking and Transportation: 
+                                <i class="fas fa-parking" style="color: #17A2B8; margin-left: 5px;"></i>
+                            </h4>
                             <ul>
                                 <li><span>&#8594;</span><strong>Assigned Parking:</strong> {{ i.Assigned_Parking }}</li>
                                 <li><span>&#8594;</span><strong>Bicycle Parking:</strong> {{ i.Bicycle_Parking }}</li>
@@ -412,7 +593,10 @@
                     <div class="rentd">
                         <!-- Transportation and Commute -->
                         <div class="section">
-                            <h4>Transportation and Commute:</h4>
+                            <h4>
+                                Transportation and Commute: 
+                                <i class="fas fa-bus" style="color: #FFC107; margin-left: 5px;"></i>
+                            </h4>
                             <ul>
                                 <li><span>&#8594;</span><strong>Major Highways Access:</strong> {{ i.Major_Highways_Access }}</li>
                                 <li><span>&#8594;</span><strong>Commute Time to Downtown:</strong> {{ i.Commute_Time_to_Downtown }}</li>
@@ -421,7 +605,10 @@
                         </div>
                         <!-- Weather-Related Factors -->
                         <div class="section">
-                            <h4>Weather-Related Factors:</h4>
+                            <h4>
+                                Weather-Related Factors: 
+                                <i class="fas fa-cloud-sun" style="color: #FFD700; margin-left: 5px;"></i>
+                            </h4>
                             <ul>
                                 <li><span>&#8594;</span><strong>Average Annual Rainfall:</strong> {{ i.Average_Annual_Rainfall }}</li>
                                 <li><span>&#8594;</span><strong>Snowfall:</strong> {{ i.Snowfall }}</li>
@@ -429,9 +616,8 @@
                             </ul>
                         </div>
                     </div>
-                    
-                    
-                    
+                   
+                      
                 {% endfor %}
                     
                 </div>
@@ -439,7 +625,7 @@
             
 
             <!-- 2nd row starts -->
-            <div class="col-sm-3 mt-4" style="position: absolute; top: 70px; right: 20px; width: 400px; padding: 10px;">
+            <div class="" style="position: absolute; top: 95px; right: 20px; width: 400px; padding: 10px;">
                 
                 <div class="ssec" style="display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center; padding: 20px;">
                     {% for i in owner_details %}
@@ -468,11 +654,13 @@
                     {% for i in property_detail %}
                         {% if request.user.userprofile.user_type == 'regular' %}
                             <div style="width: 100%; max-width: 300px;">
-                                <a href="{% url 'buying_property' i.id %}" class="btn btn-success w-100">Contact</a>
+                                <!-- <a href="{% url 'buying_property' i.id %}" class="btn btn-success w-100">Contact</a> -->
+                                <a href="mailto:{{ i.owners.email }}?subject=Inquiry about {{ i.name }}&body={{ user.username }} says: I am interested in your property." class="btn  w-100" style=" background-color: #4B3C31; border-radius: 5px;color:white">Contact</a>
+                                 
                             </div>
                             <div style="width: 100%; max-width: 300px;">
                                 {% if i.id not in wishlist_items %}
-                                    <a href="{% url 'add_to_wishlist' i.id %}" class="btn btn-outline-success w-100">Add to Wishlist</a>
+                                    <a href="{% url 'add_to_wishlist' i.id %}" class="btn btn-outline-danger w-100">Add to Wishlist</a>
                                 {% else %}
                                     <a href="{% url 'remove_from_wishlist' i.id %}" class="btn btn-outline-danger w-100">Remove from Wishlist</a>
                                 {% endif %}
@@ -481,9 +669,11 @@
                          
                     {% endfor %}
                 </div>
-            </div>        
+            </div>    
+
         </div>
    
     </div>  
 </body>
+
 {% endblock %}

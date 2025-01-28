@@ -1,0 +1,177 @@
+{% extends 'owner_base.html' %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+    .pricing-table {
+        margin-top: 30px;
+        justify-content: center;
+        display: flex;
+        gap: 30px;
+    }
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-align: center;
+        overflow: hidden;
+    }
+    .card-header {
+        margin-bottom: 20px;
+        padding: 20px;
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .basic { background-color: #f78da7; }
+    .standard { background-color: #42c7c3; }
+    .premium { background-color: #f57c00; }
+    .price {
+        font-size: 48px;
+        margin: 20px 0;
+    }
+    .features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 16px;
+    }
+    .features li {
+        padding: 10px;
+        border-top: 1px solid #eaeaea;
+    }
+    .features li:first-child {
+        border-top: none;
+    }
+    .features .included {
+        color: #28a745;
+    }
+    .features .excluded {
+        color: #dc3545;
+    }
+    .order-btn {
+        display: block;
+        padding: 15px;
+        background-color: #007bff;
+        color: #fff;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+    .order-btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+<br>
+<h1 style="text-align: center; color:rgb(3, 3, 81)">Choose the Plan <style></style></h1>
+<h2>Owner Subscription </h2>
+<div class="pricing-table">
+    <div class="card basic">
+        <div class="card-header">Basic</div>
+        <div class="price" style="margin-left: 60px;">
+            $59 <span style="font-size: 16px; color: #555;">for 1 month</span>
+        </div>
+        <ul class="features">
+            <li >All Property Features</li>
+            <li> Environmental Factors</li>
+            <li >Public Transportation</li>
+            <li >Safety and Security</li>
+        </ul>
+        <a href="#" class="order-btn" data-bs-toggle="modal" data-bs-target="#orderModal" data-plan="Basic" data-price="$59">Order Now</a>
+    </div>
+
+    <div class="card standard">
+        <div class="card-header">Standard</div>
+        <div class="price" style="margin-left: 60px;">
+            $69 <span style="font-size: 16px; color: #555;">for 3 months</span>
+        </div>
+        <ul class="features">
+            <li >Technology and Connectivity</li>
+            <li >Community and Social Life </li>
+            <li > Green Spaces and Outdoors</li>
+            <li >Education and Child Care</li>
+        </ul>
+        <a href="#" class="order-btn" data-bs-toggle="modal" data-bs-target="#orderModal" data-plan="Standard" data-price="$69">Order Now</a>
+    </div>
+
+    <div class="card premium">
+        <div class="card-header">Premium</div>
+        <div class="price" style="margin-left: 60px;">
+            $99 <span style="font-size: 16px; color: #555;">For a year</span>
+        </div>
+        <ul class="features">
+            <li >Utility and Service Quality</li>
+            <li >Nearby Employment Centers</li>
+            <li >Community Support Services</li>
+            <li >Weather-Related Factors</li>
+        </ul>
+        <a href="#" class="order-btn" data-bs-toggle="modal" data-bs-target="#orderModal" data-plan="Premium" data-price="$99">Order Now</a>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel">Subscribe to Our Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Plan:</strong> <span id="modalPlan"></span></p>
+                <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_user" class="form-label"><strong>User</strong></label>
+                        {{ form.user }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label"><strong>Username</strong></label>
+                        {{ form.username }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_price" class="form-label"><strong>Price</strong></label>
+                        {{ form.price }}
+                    </div>
+
+                    <button type="submit" class="btn" style=" background-color: #4B3C31; border-radius: 5px;color:white">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Populate modal with plan details and auto-fill price field
+    const orderButtons = document.querySelectorAll('.order-btn');
+    const modalPlan = document.getElementById('modalPlan');
+    const modalPrice = document.getElementById('modalPrice');
+
+    orderButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const plan = this.dataset.plan;
+            const price = this.dataset.price;
+
+            // Update modal text
+            modalPlan.textContent = plan;
+            modalPrice.textContent = price;
+
+            // Auto-fill price field in the form
+            const priceField = document.getElementById('id_price');
+            if (priceField) {
+                priceField.value = price.replace('$', ''); // Remove $ if present
+            }
+        });
+    });
+</script>
+
+
+{% endblock %}

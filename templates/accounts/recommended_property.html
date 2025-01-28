@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<title>Property Search</title>
+<title> Property Search </title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <style>
     body {
@@ -21,8 +21,8 @@
     <form method="post">
         {% csrf_token %}
         
-        <!-- Render the form dynamically -->
-        {{ form.as_p }}
+        <!-- Render the form with crispy forms -->
+        {{ form |crispy }}
 
         <button type="submit" class="btn btn-primary btn-block">Search Properties</button>
     </form>

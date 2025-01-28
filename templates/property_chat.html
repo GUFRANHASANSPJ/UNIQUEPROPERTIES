@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/property_chat.css' %}">
+    <h2>Chat for Property: {{ Property.name }}</h2>
+    
+    <!-- Display chat messages -->
+    <div id="chat-history">
+        {% for message in messages %}
+            <div class="message" id="message-{{ message.id }}">
+                <strong>{{ message.sender.username }}</strong>: <p>{{ message.message_body }}</p>
+                <small>{{ message.timestamp }}</small>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Message form -->
+    <form id="chat-form">
+        {% csrf_token %}
+        <textarea name="message_body" id="message-body" rows="3" placeholder="Write your message..."></textarea>
+        <button type="submit">Send Message</button>
+    </form>
+
+    <script>
+        // Handle the form submission via AJAX
+        document.getElementById('chat-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const messageBody = document.getElementById('message-body').value;
+            
+            if (messageBody.trim() === '') {
+                return; // Don't send empty messages
+            }
+            
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            // Send AJAX POST request
+            fetch("{% url 'property_chat' Property.id %}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `message_body=${encodeURIComponent(messageBody)}&csrfmiddlewaretoken=${csrfToken}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Add the new message to the chat history
+                const chatHistory = document.getElementById('chat-history');
+                const newMessage = document.createElement('div');
+                newMessage.classList.add('message');
+                newMessage.innerHTML = `
+                    <strong>${data.sender}</strong>: <p>${data.message_body}</p>
+                    <small>${data.timestamp}</small>
+                `;
+                chatHistory.appendChild(newMessage);
+
+                // Clear the input field
+                document.getElementById('message-body').value = '';
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+{% endblock %}

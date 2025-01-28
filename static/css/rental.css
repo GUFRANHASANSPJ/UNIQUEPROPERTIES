@@ -1,0 +1,35 @@
+
+
+.bg-custom-green {
+    background-color: #b36c01 !important;
+    /* Green */
+}
+
+.btn-outline-custom-green {
+    color: #b36c01 !important;
+    border-color: #b36c01 !important;
+}
+
+.text-address{
+    color: #514637 !important;
+}
+.text-price{
+    color:#484847; 
+    font-size: 18px;
+     font-weight: bold;
+}
+.text-visit-count{
+    color: #3f3b36;
+}
+
+.btn-bg-color{
+    background-color: #4B3C31 !important;
+    color: white !important;
+
+}
+.heading-color {
+    text-shadow: 1px 1px 2px rgb(7, 7, 7);
+    color: #040404eb !important;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+     font-weight:bold;
+}

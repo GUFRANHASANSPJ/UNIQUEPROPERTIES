@@ -5,14 +5,44 @@ from accounts.models import *
 
 # user forms section
 class UserForm1(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}),
+        required=True
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm your password'}),
+        required=True
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
+        required=True
+    )
     class Meta:
-        model=User
-        fields=["username","first_name","last_name","email","password"]
+        model = User
+        fields = ["username", "first_name", "last_name", "email", "password"]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        if password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data
         
 class UserForm2(forms.ModelForm):
     class Meta:
         model=UserProfile
-        fields= ['phone','address','images']
+        fields= ['address','images']
+        widgets = {
+            'images': forms.ClearableFileInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Upload your image', 
+                'accept': 'image/*'
+            }),
+        }
+        labels = {
+            'images': 'Upload your image',  # Change the label to your desired text
+        }
     # captcha = ReCaptchaField()
 
 
@@ -28,14 +58,32 @@ class EditUserProfileForm2(forms.ModelForm):
 
 # owners forms section
 class OwnerForm1(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'})
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm your password'})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
+        required=True
+    )
     class Meta:
         model=User
         fields=["username","first_name","last_name","email","password"]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        if password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data
         
 class OwnerForm2(forms.ModelForm):
     class Meta:
         model=property_owner
-        fields=['phone','address','owner_image']
+        fields=['address','owner_image']
     # captcha = ReCaptchaField()
 
 class EditOwnerProfileForm1(forms.ModelForm):

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
 <style>
     
 </style>
@@ -25,7 +27,7 @@
             <label for="message" class="form-label">Message</label>
             <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn " style=" background-color: #4B3C31; border-radius: 5px;color:white">Submit</button>
     </form>
 
     <!-- FAQ Section -->

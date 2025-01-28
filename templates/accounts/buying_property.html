@@ -1,39 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h4 class="mb-4 text-center">Property Inquiry Form</h4>
-            
-            <form method="post" action="{% url 'index' %}">
-                {% csrf_token %}
-                
-                <!-- Name Field -->
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
-                </div>
+{% if user.is_authenticated %}
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="message" required></textarea>
+    
+    <label for="communication_method">Choose communication method:</label>
+    <select name="communication_method" required>
+      <option value="email">Email</option>
+      <option value="sms">SMS</option>
+      <option value="whatsapp">WhatsApp</option>
+    </select>
+    
+    <button type="submit">Send</button>
+  </form>
 
-                <!-- Mobile Number Field -->
-                <div class="mb-3">
-                    <label for="mobile" class="form-label">Mobile Number</label>
-                    <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="Enter your mobile number" pattern="[0-9]{10}" required>
-                </div>
+  <!-- Email link using mailto -->
+  <a href="mailto:{{ property_detail.owners.email }}?subject=Inquiry about {{ property_detail.name }}&body={{ user.username }} says: I am interested in your property.">Send Email to Owner</a>
+{% else %}
+  <p>You need to <a href="{% url 'login' %}">log in</a> to send a message.</p>
+{% endif %}
 
-                <!-- Property Name Field -->
-                <div class="mb-3">
-                    <label for="property_name" class="form-label">Property Name</label>
-                    <input type="text" class="form-control" id="property_name" name="property_name" placeholder="Enter the property name" required>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 {% endblock %}

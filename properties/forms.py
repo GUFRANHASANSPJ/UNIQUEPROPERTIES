@@ -17,6 +17,9 @@ Smart_Home_Features_OPTIONS = [
 Luxury_Amenities_OPTIONS = [
     ("Gym", "Gym"),
     ("Pool", "Pool"),
+    ("Spa", "Spa"),
+    ("Saloon", "Saloon"),
+    ("Cinema", "Cinema"),
 ]
 
 class PropertyForm(forms.ModelForm):
@@ -42,6 +45,7 @@ class PropertyForm(forms.ModelForm):
         model=property
         fields='__all__'
         exclude = ['owners','visit_count','images','lat', 'lng',"rating_count","rating","p_rating"]
+        
 
     def clean_latitude(self):
         latitude = self.cleaned_data.get('latitude')

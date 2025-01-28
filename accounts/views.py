@@ -21,10 +21,15 @@ def User_Registration(request):
 
             profile=form2.save(commit=False)
             profile.user=user
+            # Save the phone field from the HTML form
+            phone = request.POST.get("phone")
+            print("Phone number from form:", phone)
+            if phone:
+                profile.phone = phone
             profile.save()
             messages.success(request, "Resistered successfully!")
             registation=True
-            return redirect('login')
+            return redirect('index')
     else:
         form1 = UserForm1()
         form2=UserForm2()
@@ -36,22 +41,38 @@ def UserLogin(request):
         password = request.POST.get("password")
         print(username, password)
         user = authenticate(username=username, password=password)
+        
         if user:
             if user.is_active:
                 login(request, user)
-                messages.success(request, "Logged in  successfully!")
-                return redirect("index")
+
+                # Check if the logged-in user is an 'owner' or 'regular' user
+                if hasattr(user, 'userprofile'):  # Check if user has a user profile (regular user)
+                    if user.userprofile.user_type == 'regular':
+                        messages.success(request, "Logged in successfully!")
+                        return redirect("index")  # Redirect to index for regular users
+                
+                # Check if the user is an 'owner'
+                if hasattr(user, 'property_owner'):  # Check if user has property_owner (owner)
+                    messages.success(request, "Logged in successfully!")
+                    return redirect("ownerdetails")  # Redirect to owner details page for owners
+
+                # If neither a regular user nor an owner
+                return HttpResponse("User type is unknown.")
             else:
                 return HttpResponse("User is not active")
         else:
             return HttpResponse("Check your credentials!!")
+    
     return render(request, "accounts/login.html")
 
+@login_required
 def UserDetails(request):
     has_subscription = Subscription.objects.filter(user=request.user).exists()
     UserDetails=UserProfile.objects.get(user=request.user)
     return render(request,'accounts/userdetails.html',{'UserDetails':UserDetails,"has_subscription":has_subscription})
 
+@login_required
 def edit_user_profile(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
@@ -73,7 +94,7 @@ def edit_user_profile(request):
 def UserLogout(request):
     logout(request)
     messages.success(request, "Logout successfully!")
-    return redirect("login")
+    return redirect("index")
 
 def Owner_Registration(request):
     registation=False
@@ -87,6 +108,10 @@ def Owner_Registration(request):
 
             profile=form2.save(commit=False)
             profile.owner=user
+             # Save the phone field from the HTML form
+            phone = request.POST.get("phone")
+            if phone:
+                profile.phone = phone
             profile.save()
             registation=True
             return redirect('login')
@@ -112,7 +137,7 @@ def OwnerLogin(request):
             return HttpResponse("Check your credentials!")
     return render(request, "accounts/login.html")
 
-
+@login_required
 def edit_owner_profile(request):
     # Get the profile of the currently logged-in user
     owner_profile = get_object_or_404(property_owner, owner=request.user)
@@ -145,12 +170,19 @@ def OwnerDetails(request):
     OwnerDetails=property_owner.objects.get(owner=request.user)
     OwnerProperties = propertymodel.objects.filter(owners=request.user).order_by('id')
     # OwnerProperties = property.objects.filter(owners =OwnerDetails).order_by('id')
-    return render(request,'accounts/ownerdetails.html',{'OwnerDetails':OwnerDetails,'OwnerProperties':OwnerProperties})
+    has_subscription = (
+        Subscription.objects.filter(user=request.user).exists()
+        if request.user.is_authenticated
+        else False
+    )
+    return render(request,'accounts/ownerdetails.html',{'OwnerDetails':OwnerDetails,
+                                                        'OwnerProperties':OwnerProperties,
+                                                        'has_subscription': has_subscription})
 
 def OwnerLogout(request):
     logout(request)
     messages.success(request, "Logout successfully!")
-    return redirect("login")
+    return redirect("index")
 
 # def UserDetails(request):
 #     if request.user.UserProfile.user_type =='regular':
@@ -183,7 +215,7 @@ def Agent_Registration(request):
         form1 = AgentForm1()
         form2=AgentForm2()
     return render(request,"accounts/usereg.html",{"form1":form1,"form2":form2, "registation":registation})
-
+@login_required
 def edit_agent_profile(request):
     agent_profile = get_object_or_404(Agents, agent=request.user)
     if request.method == 'POST':
@@ -195,7 +227,7 @@ def edit_agent_profile(request):
         form = EditAgentProfileForm(instance=agent_profile)
     return render(request, 'accounts/edit_agent_details.html', {'form': form})
 
-
+@login_required
 def AgentDetails(request):
     AgentDetails=Agents.objects.get(agent =request.user)
     AgentProperties = property.objects.filter(owners = request.user).order_by('id')
@@ -233,9 +265,15 @@ def create_subscription(request):
             return redirect('index')  # Redirect to a success page or another view
     else:
         form = SubscriptionForm(user=request.user)
-    return render(request, 'accounts/subscription_form.html', {'form': form})
+    if hasattr(request.user, 'userprofile'):  # Check if user has a user profile (regular user)
+                    if request.user.userprofile.user_type == 'regular':
+                       return render(request, 'accounts/subscription_form.html', {'form': form})
+                
+    if hasattr(request.user, 'property_owner'):  # Check if user has property_owner (owner)
+        return render(request, 'accounts/owner_subscription.html', {'form': form})
 
 def recommended_property(request):
+
     form = PropertySearchForm(request.POST or None)
     
     if request.method == 'POST' and form.is_valid():
@@ -325,3 +363,11 @@ def recommended_property(request):
 
     # If the form is not valid or it's a GET request, render the form
     return render(request, 'accounts/recommended_property.html', {'form': form})
+
+
+@login_required
+def mark_as_sold(request, property_id):
+    property_instance = get_object_or_404(propertymodel, id=property_id, owners=request.user)
+    property_instance.proprty_status = False
+    property_instance.save()
+    return redirect('ownerdetails')  # Replace with the actual name of your OwnerDetails view's URL

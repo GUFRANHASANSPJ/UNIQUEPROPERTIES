@@ -1,0 +1,146 @@
+{% extends 'owner_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Users Who Viewed the Property: <strong>{{ property_detail.name }}</strong></h1>
+
+    {% if viewers_with_properties %}
+        <!-- Table for displaying users -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Id</th> <!-- Serial Number Column -->
+                    <th style="width: 30%;">Name</th> <!-- Adjusted width for Name -->
+                    <th style="width: 20%;">List</th> <!-- Adjusted width for List -->
+                    <th style="width: 10%;">Action</th> <!-- Adjusted width for Action -->
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for viewer_data in viewers_with_properties %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            {% if forloop.first or show_all %}
+                                {{ viewer_data.user.username }}
+                            {% else %}
+                                <span class="text-muted"><em>Hidden</em></span>
+                            {% endif %}
+                        </td>
+                    
+                        <td>
+                            <button 
+                                class="btn btn-info btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="{% if has_subscription %}#propertiesModal{{ viewer_data.user.id }}{% else %}#subscriptionRequiredModal{% endif %}">
+                                List of Properties
+                            </button>
+                        </td>
+                        <td>
+                            <button 
+                                class="btn btn-info btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="{% if has_subscription %}#viewDetailsModal{{ viewer_data.user.id }}{% else %}#subscriptionRequiredModal{% endif %}">
+                                View Details
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Modal for List of Properties -->
+                    <div class="modal fade" id="propertiesModal{{ viewer_data.user.id }}" tabindex="-1" aria-labelledby="propertiesModalLabel{{ viewer_data.user.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header bg-info text-white">
+                                    <h5 class="modal-title" id="propertiesModalLabel{{ viewer_data.user.id }}">Visited Properties by {{ viewer_data.user.username }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% if viewer_data.viewed_properties %}
+                                        <ul>
+                                            {% for property in viewer_data.viewed_properties %}
+                                                <li>{{ property.property.name }} - Visited on {{ property.viewed_at|date:"F j, Y, g:i a" }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p class="text-muted">No properties visited by this user.</p>
+                                    {% endif %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal for View Details -->
+                    <div class="modal fade" id="viewDetailsModal{{ viewer_data.user.id }}" tabindex="-1" aria-labelledby="viewDetailsModalLabel{{ viewer_data.user.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header bg-info text-white">
+                                    <h5 class="modal-title" id="viewDetailsModalLabel{{ viewer_data.user.id }}">User Details: {{ viewer_data.user.username }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Name:</strong> {{ viewer_data.user.username }}</p>
+                                            <p><strong>Email:</strong> <a href="mailto:{{ viewer_data.user.email }}">{{ viewer_data.user.email }}</a></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Phone:</strong> 
+                                                {% if viewer_data.user.userprofile.phone %}
+                                                    {{ viewer_data.user.userprofile.phone }}
+                                                {% else %}
+                                                    <em>Not available</em>
+                                                {% endif %}
+                                            </p>
+                                            <p><strong>Viewed at:</strong> {{ viewer_data.viewed_at|date:"F j, Y, g:i a" }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            No users have viewed this property yet.
+        </div>
+    {% endif %}
+
+    <!-- See All Viewers Button -->
+    {% if not show_all %}
+        <div class="text-end mt-4" >
+            <a href="?show_all=true" class="btn btn-primary">See All Viewers</a>
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{% url 'ownerdetails' %}" class="btn btn-secondary btn-lg">Back to Your Properties</a>
+    </div>
+
+    <!-- Subscription Required Modal -->
+    <div class="modal fade" id="subscriptionRequiredModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title">Subscription Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>You are not a Prime Member. Upgrade to view more details.</p>
+                    <a href="{% url 'create_subscription' %}" class="btn btn-primary">Click Here for Subscription</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+{% endblock %}

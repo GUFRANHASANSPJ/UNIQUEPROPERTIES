@@ -142,7 +142,7 @@ def about_us(request):
 
 def property_details(request, id):
     property_detail = get_object_or_404(property, id=id)
-    similar_properties = get_similar_properties(property_detail, limit=4)
+    # similar_properties = get_similar_properties(property_detail, limit=4)
     # Increment visit count
     property_detail.visit_count += 1
     property_detail.save()
@@ -167,16 +167,17 @@ def property_details(request, id):
     wishlist_items = Wishlist.objects.filter(user=request.user).values_list('property_id', flat=True) if request.user.is_authenticated else []
     context={
         'property_detail': [property_detail],
+        'property': property_detail,
         'owner_details': [owner_details],
-        'owner_details_auth': [owner_details_auth],
+        'owner_details_auth': owner_details_auth,
         # 'agent_details': [agent_details],
         'wishlist_items': wishlist_items,
         'has_subscription': has_subscription,
         'form': form,
         'property_images': property_images,
-        'similar_properties': similar_properties,
+        # 'similar_properties': similar_properties,
     }
-    print(similar_properties)
+    # print(similar_properties)
     return render(request, 'property_details.html', context)
 
 def property_details_Subscription(request, id):
@@ -185,6 +186,17 @@ def property_details_Subscription(request, id):
     property_detail.visit_count += 1
     property_detail.save()
     has_subscription = Subscription.objects.filter(user=request.user).exists()
+
+    address_name= property_detail.address
+    print(address_name)
+    nearby_places={}
+    try:
+        address = Address.objects.get(name=address_name)
+        nearby_places= get_object_or_404(Nearby,address_id=address.id)
+        # print(address.id)
+    except Address.DoesNotExist:
+        print("No address found with this name.")
+    # print(nearby_places)
     owner_id= property_detail.owners.id
     agent_id= property_detail.owners.id
     owner_details= get_object_or_404(property_owner, owner_id=owner_id)
@@ -201,8 +213,26 @@ def property_details_Subscription(request, id):
         'wishlist_items': wishlist_items,
         'has_subscription': has_subscription,
         'property_images': property_images,
+        'nearby_places': nearby_places,
     }
     return render(request, 'property_details_subscription.html', context)
+
+def owner_property_details(request,id):
+    property_detail = get_object_or_404(property, id=id)
+    # Increment visit count
+    
+    owner_id= property_detail.owners.id
+    owner_details= get_object_or_404(property_owner, owner_id=owner_id)
+    owner_details_auth= get_object_or_404(User, id=owner_id)
+    property_images=property_detail.images
+    # Get wishlist items for the current user
+    context={
+        'property_detail': [property_detail],
+        'owner_details': [owner_details],
+        'owner_details_auth': owner_details_auth,
+    
+    }
+    return render(request, 'owner_property_details.html', context)
 
 def all_images(request, id):
     property_detail = get_object_or_404(property, id=id)
@@ -236,10 +266,13 @@ def property_search(request):
     if city:
         filters['city__icontains'] = city
 
-    # Filtering by property_info
-    property_info = request.GET.get('property_info')
-    if property_info:
-        filters['proprty_info__icontains'] = property_info
+    # Filtering by property_info (Bed)
+    bed = request.GET.get('bed')
+    if bed:
+        try:
+            filters['bed'] = int(bed)  # Convert to integer for filtering
+        except ValueError:
+            pass  # Ignore invalid values
 
     # Filtering by pet_friendly
     pet_friendly = request.GET.get('pet_friendly')
@@ -276,41 +309,20 @@ def Agent_Details_For_users(request,id):
 
 def AddNewProperty(request):
     if request.method == 'POST':
+        print("1*********")
         form = PropertyForm(request.POST, request.FILES)
+
         if form.is_valid():
             property_instance = form.save(commit=False)
-            property_instance.owners = request.user
+            property_instance.owners = request.user  # Set the property owner
 
-            # Process images
-            image_files = request.FILES.getlist('images')
-            if image_files:
-                property_instance.images = save_images_to_property_folder(property_instance.name, image_files)
-
-            property_instance.save()
-
-            # Calculate and assign overall rating
-            property_instance.p_rating = calculate_overall_rating(property_instance)
-            property_instance.save()
-
-            return redirect('index')  # Redirect after saving
-
-    else:
-        form = PropertyForm()
-
-    # return render(request, 'addnewproperty.html', {'form': form})
-    return render(request, 'address.html', {'form': form})
-
-
-def edit_property(request, property_id):
-    # Retrieve the specific property by its ID
-    property_instance = get_object_or_404(property, id=property_id)
-
-    if request.method == 'POST':
-        # Bind form with POST data and file data for updating
-        form = PropertyForm(request.POST, request.FILES, instance=property_instance)
-        if form.is_valid():
-           # Save changes to the property, including images
-            property_instance = form.save(commit=False)
+            # Manually update the address-related fields with the names from the hidden fields
+            property_instance.country = request.POST.get('country')
+            property_instance.state = request.POST.get('state')
+            property_instance.city = request.POST.get('city')
+            property_instance.county = request.POST.get('county')
+            property_instance.address = request.POST.get('address')
+            print("2*********")
             # Process images
             image_files = request.FILES.getlist('images')
             if image_files:
@@ -324,16 +336,97 @@ def edit_property(request, property_id):
 
             # After saving, recalculate and update the rating
             property_instance.p_rating = calculate_overall_rating(property_instance)
-            
-            # Save the property instance with the updated rating
+            # Save the property instance
             property_instance.save()
-            return redirect('index') 
-             # Redirect to the owner details page
+
+            return redirect('index')  # Redirect after saving
+
+    else:
+        print("Not a valid form :************")
+        form = PropertyForm()
+
+    return render(request, 'addnewproperty.html', {'form': form})
+
+
+
+
+def edit_property(request, property_id):
+    # Retrieve the specific property by its ID
+    property_instance = get_object_or_404(property, id=property_id)
+
+    if request.method == 'POST':
+        # Bind form with POST data and file data for updating
+        form = PropertyForm(request.POST, request.FILES, instance=property_instance)
+        if form.is_valid():
+            property_instance = form.save(commit=False)
+            property_instance.owners = request.user  # Set the property owner
+
+            # Manually update the address-related fields with the names from the hidden fields
+            property_instance.country = request.POST.get('country')
+            property_instance.state = request.POST.get('state')
+            property_instance.city = request.POST.get('city')
+            property_instance.county = request.POST.get('county')
+            property_instance.address = request.POST.get('address')
+            print("2*********")
+            # Process images
+            image_files = request.FILES.getlist('images')
+            if image_files:
+                property_instance.images = save_images_to_property_folder(property_instance.name, image_files)
+
+            property_instance.save()
+
+            # Extract latitude and longitude from the POST data
+            property_instance.lat = request.POST.get('lat')
+            property_instance.lng = request.POST.get('lng')
+
+            # After saving, recalculate and update the rating
+            property_instance.p_rating = calculate_overall_rating(property_instance)
+            # Save the property instance
+            property_instance.save()
+
+            return redirect('index')  # Redirect after saving
+
     else:
         # Display form with current property data
         form = PropertyForm(instance=property_instance)
 
     return render(request, 'edit_property.html', {'form': form})
+
+
+def edit_property1(request, property_id):
+    # Retrieve the specific property by its ID
+    property_instance = get_object_or_404(property, id=property_id)
+
+    if request.method == 'POST':
+        # Bind form with POST data and file data for updating
+        form = PropertyForm(request.POST, request.FILES, instance=property_instance)
+        if form.is_valid():
+            property_instance = form.save(commit=False)
+            property_instance.owners = request.user  # Set the property owner
+
+            # Process images
+            image_files = request.FILES.getlist('images')
+            if image_files:
+                property_instance.images = save_images_to_property_folder(property_instance.name, image_files)
+
+            property_instance.save()
+
+            # Extract latitude and longitude from the POST data
+            property_instance.lat = request.POST.get('lat')
+            property_instance.lng = request.POST.get('lng')
+
+            # After saving, recalculate and update the rating
+            property_instance.p_rating = calculate_overall_rating(property_instance)
+            # Save the property instance
+            property_instance.save()
+
+            return redirect('ownerdetails')  # Redirect after saving
+
+    else:
+        # Display form with current property data
+        form = PropertyForm(instance=property_instance)
+
+    return render(request, 'edit1.html', {'form': form})
 
 
 def delete_property(request, property_id):
@@ -342,7 +435,7 @@ def delete_property(request, property_id):
 
     if request.method == 'POST':
         property_instance.delete()  # Delete the property from the database
-        return redirect('index')  # 
+        return redirect('ownerdetails')  # 
 
     return render(request, 'confirm_delete.html', {'property': property_instance})
 
@@ -353,7 +446,7 @@ def Buying_Property(request,id):
     if request.user.is_authenticated:
         Contacted_Property.objects.get_or_create(user=request.user, property=property_detail)
 
-    return render(request,'accounts/buying_property.html')
+    return render(request,'accounts/buying_property.html',{'property_detail':property_detail})
 
 
 def submit_rating(request, property_id):
@@ -402,6 +495,46 @@ def viewed_properties(request):
         viewed_properties = []
 
     return render(request, 'viewed_properties.html', {'viewed_properties': viewed_properties})
+
+@login_required
+def property_viewers_for_owner(request, property_id):
+    # Retrieve the property
+    property_detail = get_object_or_404(property, id=property_id)
+
+    # Fetch all users who have viewed this property
+    viewers = ViewedProperty.objects.filter(property=property_detail).select_related('user')
+    has_subscription = (
+        Subscription.objects.filter(user=request.user).exists()
+        if request.user.is_authenticated
+        else False
+    )
+    show_all = request.GET.get('show_all', False)
+    if show_all and not has_subscription:
+        return redirect('create_subscription')
+    owner_properties = property.objects.filter(owners= request.user)
+
+    # Add a list of properties viewed by each user for this owner
+    viewers_with_properties = []
+    for viewer in viewers:
+        properties_viewed = ViewedProperty.objects.filter(
+            user=viewer.user, property__in= owner_properties
+        ).select_related('property')
+        viewers_with_properties.append({
+            'user': viewer.user,
+            'viewed_properties': properties_viewed
+        })
+    # Pass the property details and viewers to the template
+    return render(request, 'accounts/property_viewers.html', {
+        'property_detail': property_detail,
+        'has_subscription': has_subscription,
+        'viewers': viewers,
+        'show_all': show_all,
+        'viewers_with_properties': viewers_with_properties,
+    })
+
+
+
+
 
 @login_required
 def remove_from_viewed_properties(request, property_id):
@@ -474,6 +607,108 @@ def get_cities(request, state_id):
     cities = City.objects.filter(state_id=state_id).values('id', 'name')
     return JsonResponse(list(cities), safe=False)
 
+def get_counties(request, city_id):
+    counties = County.objects.filter(city_id=city_id).values('id', 'name')
+    return JsonResponse(list(counties), safe=False)
+
+def get_addresses(request, county_id):
+    addresses = Address.objects.filter(county_id=county_id).values('id', 'name')
+    print(addresses)
+    return JsonResponse(list(addresses), safe=False)
+
+
 def get_pincodes(request, city_id):
     pincodes = Pincode.objects.filter(city_id=city_id).values('id', 'pincode')
     return JsonResponse(list(pincodes), safe=False)
+
+from django.utils import timezone
+
+@login_required
+def property_chat(request, property_id):
+    # Get the property by ID
+    property_instance = get_object_or_404(property, id=property_id)
+    
+    # Ensure the user is either the owner or a regular user
+    # request.user.property_owner.user_type == 'owner' or
+    if not ( request.user.userprofile.user_type == 'regular'):
+        return HttpResponse("You are not allowed to access this chat.")
+    
+    # Get the chat history (messages between user and owner for this property)
+    messages = Message.objects.filter(Property=property_instance).order_by('timestamp')
+    
+    # Handle message sending (POST request)
+    if request.method == 'POST':
+        message_body = request.POST.get('message_body')
+
+        if message_body:  # Ensure there's a message to send
+            # Determine the receiver based on the user type
+            receiver = property_instance.owners if request.user != property_instance.owners else property_instance.owners
+
+            # Create a new message
+            message = Message.objects.create(
+                sender=request.user,
+                receiver=receiver,
+                Property=property_instance,
+                message_body=message_body,
+                timestamp=timezone.now()  # Set the timestamp to the current time
+            )
+            
+            # Return the new message as a JSON response (to update the frontend)
+            return JsonResponse({
+                'sender': message.sender.username,
+                'receiver': message.receiver.username,
+                'message_body': message.message_body,
+                'timestamp': message.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+            })
+    
+    return render(request, 'property_chat.html', {
+        'Property': property_instance,
+        'messages': messages
+    })
+
+def get_nearby_schools(request):
+    address_id = request.GET.get('address_id')
+    
+    if address_id:
+        # Fetch the nearby places for the selected address
+        nearby_data = Nearby.objects.filter(address_id=address_id).first()
+        schools = nearby_data.nearby_schools if nearby_data else []
+        
+        return JsonResponse({'schools': schools})
+    else:
+        return JsonResponse({'schools': []})
+    
+def get_nearby_info(request):
+    address_id = request.GET.get('address_id')
+    if address_id:
+        nearby_info = Nearby.objects.filter(address_id=address_id).first()  # Assuming one record per address
+        if nearby_info:
+            data = {
+                'air_pollution_level': nearby_info.Air_Pollution_Levels,
+                'noise_pollution': nearby_info.Noise_Pollution,
+                'flood_zone': nearby_info.Flood_Zone,
+                'earthquake_zone': nearby_info.Earthquake_Zone,
+                'proximity_to_public_transit': nearby_info.Proximity_to_Public_Transit,
+                'proximity_to_airport': nearby_info.Proximity_to_Airport,
+                'police_station_proximity': nearby_info.Police_Station_Proximity, 
+
+                'road_quality': nearby_info.Road_Quality,
+                'neighborhood_crime_rate': nearby_info.Neighborhood_Crime_Rate,
+                'police_station_proximity': nearby_info.Police_Station_Proximity,
+                'fire_station_proximity': nearby_info.Fire_Station_Proximity,
+
+                'internet_speed': nearby_info.Internet_Speed,
+                'cell_network_coverage': nearby_info.Cell_Network_Coverage,
+                'proximity_to_parks': nearby_info.Proximity_to_Parks,
+                'business_district_proximity': nearby_info.Business_District_Proximity,
+                'industrial_areas': nearby_info.Industrial_Areas,
+                'major_highways_access': nearby_info.Major_Highways_Access,
+                'commute_time_to_downtown': nearby_info.Commute_Time_to_Downtown,
+                'historical_building_status': nearby_info.Historical_Building_Status,
+                'cultural_heritage_sites': nearby_info.Cultural_Heritage_Sites,
+                'average_annual_rainfall': nearby_info.Average_Annual_Rainfall,
+                'snowfall': nearby_info.Snowfall,
+                # Add other fields here...
+            }
+            return JsonResponse(data)
+    return JsonResponse({'error': 'No data found'}, status=404)

@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/rental.css' %}">
 <br>
+<style>
+    .text-name{
+        color:#201e1b;
+        font-size: 20px;
+        font-style:oblique;
+        font-weight: bold;
+    }
+</style>
+
 <div class="container position-relative">
     <!-- Page Title -->
-    <h1 class="text-center">BUYING PROPERTIES LIST</h1>
+    <h1 class="text-center heading-color">BUYING PROPERTIES LIST</h1>
 
     <!-- Sorting Controls (Top-Right) -->
     <div style="position: absolute; top: 1px; right: 0px;">
@@ -22,19 +34,17 @@
                 <option value="desc" {% if sort_order == "desc" %}selected{% endif %}>Descending</option>
             </select>
 
-            <button type="submit" class="btn btn-success">Sort</button>
+            <button type="submit" class="btn btn-bg-color">Sort</button>
         </form>
     </div>
 </div>
 
-
-
 <div class="container" style="padding-top: 50px; padding-left: 120px;">
     <form method="GET" action="{% url 'property_search' %}" class="input-group mt-6" style="max-width: 100%; display: flex; 
-    flex-wrap: wrap; align-items: center; gap: 7px;">
+    flex-wrap: wrap; align-items: center; gap: 5px;">
 
         <!-- Search by City -->
-        <input type="text" name="q" id="citySearch" class="form-control"  placeholder="Select City" value="{{ request.GET.q }}" 
+        <input type="text" name="q" id="citySearch" class="form-control "  placeholder="Select City" value="{{ request.GET.q }}" 
         oninput="fetchCitySuggestions(this.value)" autocomplete="off" style="flex-grow: 1;">
         <!-- Suggestions Dropdown -->
         <div id="citySuggestions" class="suggestions-dropdown"></div>
@@ -67,26 +77,24 @@
         </select>
 
         <!-- Search Button -->
-        <button type="submit" class="btn btn-success" style="min-width: 90px; border-radius: 10px;">Filter</button>
+        <button type="submit" class="btn btn-bg-color" style="min-width: 90px; border-radius: 5px;">Filter</button>
 
         <!-- Properties Near Me Button -->
-        <button type="button" class="btn btn-success" id="near-me-btn" style="min-width: 140px;border-radius: 10px;">Properties Near Me</button>
-
+        <button type="button" class="btn btn-bg-color" id="near-me-btn" style="min-width: 140px;border-radius: 5px;">Properties Near Me</button>
     </form>
-
-    <!-- Link to Recommended Properties Page -->
-    <a href="{% url 'recommended_property' %}" class="btn btn-primary mt-3" style="min-width: 180px; border-radius: 10px; text-align: center;">Recommended Properties</a>
 </div>
 
+<br>
+<br>
 
-
-<br><br>
 <div class="container">
     <div class="jumbotron">
-        <div class="row" style="margin-left: 6rem;">
+        <!-- Property Cards -->
+        <div class="row" style="margin-left: 6rem;"> <!-- ms-3 adds left margin -->
             {% for i in page_obj %}
-                <div class="col-md-4 d-flex align-items-stretch mb-4">
+                <div class="col-md-4 d-flex align-items-stretch mb-5">
                     <div class="card h-100 position-relative" style="width: 18rem;">
+                        
                         <!-- Wishlist Icon -->
                         <div class="position-absolute top-0 end-0 m-2">
                             {% if i.id not in wishlist_items %}
@@ -101,29 +109,40 @@
                         </div>
                         
                         <!-- Property Image -->
-                        {% if i.images %}
-                            <a href="{% url 'property_details' i.id %}">
-                                <img src="{{ i.images.0 }}" class="card-img-top" alt="Property Image" style="height: 200px; object-fit: cover;">
-                            </a>
-                        {% else %}
-                            <p>No image available</p>
-                        {% endif %}
+                        <div class="position-relative" style="height: 200px; background-color: #f8f9fa;">
+                            {% if i.images %}
+                                <a href="{% url 'property_details' i.id %}">
+                                    <img src="{{ i.images.0 }}" class="card-img-top" alt="Property Image" style="height: 100%; width: 100%; object-fit: cover;">
+                                </a>
+                            {% else %}
+                                <div style="height: 200px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                                    <span style="color: #aaa; font-size: 14px;">No Image Available</span>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Sold Out Badge -->
+                            {% if not i.proprty_status %}
+                                <div class="position-absolute bottom-0 end-0 m-2 bg-danger text-white px-2 py-1 rounded">
+                                    Sold Out
+                                </div>
+                            {% endif %}
+                        </div>
                         
                         <!-- Rating Icon -->
                         <div class="position-absolute top-0 start-0 m-2 d-flex align-items-center" style="background-color: #fff9c4; border-radius: 5px; padding: 4px 8px;">
                             <i class="fas fa-star text-warning"></i>
-                            <span class="ms-1">{{ i.rating|default:"0.0"|floatformat:1 }}</span>
+                            <span class="ms-1">{{ i.p_rating|default:"0.0"|floatformat:1 }}</span>
                         </div>
                         
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title d-flex justify-content-between align-items-center">
                                 <!-- Property Name -->
-                                <a href="{% url 'property_details' i.id %}" class="text-dark text-decoration-none">
+                                <a href="{% url 'property_details' i.id %}" class="text-name text-decoration-none">
                                     {{ i.name }}
                                 </a>
                                 
                                 <!-- Property Price -->
-                                <span class="text-success fw-bold">
+                                <span class="text-price fw-bold">
                                     ${{ i.property_price|floatformat:0 }} <!-- Formats the price without decimal places -->
                                 </span>
                             </h5>
@@ -131,7 +150,6 @@
                             <p class="card-text">
                                 <!-- Icons for BHK, Bath, Bed -->
                                 <div class="d-flex justify-content-between">
-                                    <!-- BHK (1BHK) -->
                                     
                                     <!-- Bath -->
                                     <div class="d-flex align-items-center">
@@ -145,6 +163,7 @@
                                         <span>{{ i.bed }} </span>
                                     </div>
 
+                                    <!-- Area -->
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-square ms-2 me-2"></i> <!-- Added me-2 for margin after icon -->
                                         <span>{{ i.area }}</span> <!-- Assuming 'proprty_info' is the field for BHK -->
@@ -152,29 +171,26 @@
                                 </div>
                             </p>
                             
-                            <a class="btn btn-success mt-auto" href="{% url 'property_details' i.id %}">Get details</a>
+                            <a class="btn btn-bg-color mt-auto" href="{% url 'property_details' i.id %}">Get details</a>
                         </div>
-                        
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
-    
-    
-    
-        
+</div>
+
         <!-- Pagination Controls -->
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1" aria-label="First">
+                        <a class="page-link" href="?page=1&sort={{ sort_by }}&order={{ sort_order }}" aria-label="First">
                             <span aria-hidden="true">&laquo;&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&sort={{ sort_by }}&order={{ sort_order }}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
@@ -183,23 +199,23 @@
                 {% for num in page_obj.paginator.page_range %}
                     {% if page_obj.number == num %}
                         <li class="page-item active" aria-current="page">
-                            <span class="page-link">{{ num }}</span>
+                            <span class="page-link" style="background-color: rgb(25, 147, 90);">{{ num }}</span>
                         </li>
                     {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            <a class="page-link btn-bg-color" href="?page={{ num }}&sort={{ sort_by }}&order={{ sort_order }}">{{ num }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
 
                 {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&sort={{ sort_by }}&order={{ sort_order }}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&sort={{ sort_by }}&order={{ sort_order }}" aria-label="Last">
                             <span aria-hidden="true">&raquo;&raquo;</span>
                         </a>
                     </li>
@@ -208,5 +224,26 @@
         </nav>
     </div>
 </div>
+<script>
+    // Handle "Properties Near Me" button click
+    document.getElementById('near-me-btn').addEventListener('click', function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
 
+                    // Redirect to properties near me page with coordinates
+                    const nearbyPropertiesUrl = `/properties-near-me/?lat=${lat}&lng=${lng}`;
+                    window.location.href = nearbyPropertiesUrl;
+                },
+                function (error) {
+                    alert("Unable to access location. Please enable location services and try again.");
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    });
+</script>
 {% endblock %}

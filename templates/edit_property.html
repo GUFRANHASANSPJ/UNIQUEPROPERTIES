@@ -1,334 +1,637 @@
-{% extends 'base.html' %}
+{% extends 'owner_base.html' %}
 
 {% block content %}
-<style>
-    form {
-        margin: 20px; /* Add padding around the form */
-        padding: 20px; /* Add padding inside the form */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-    }
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/addnewproperty.css' %}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    fieldset {
-        margin-bottom: 20px;
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
-
-    legend {
-        font-weight: bold;
-        padding: 0 10px;
-        color: #333;
-    }
-
-    .form-row {
-        display: flex;
-        flex-wrap: wrap; /* Allow wrapping to the next line */
-        margin-bottom: 15px;
-    }
-
-    .form-field {
-        flex: 1 1 calc(25% - 20px); /* 25% width minus margin */
-        margin: 10px;
-        box-sizing: border-box; /* Include padding and border in width */
-    }
-
-    input[type="file"] {
-        margin: 10px 0;
-    }
-
-    button[type="submit"] {
-        width: 300px;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    button[type="submit"]:hover {
-        background-color: #0056b3;
-    }
-</style>
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css">
 
 <div>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+    <form method="post" class="form-style" enctype="multipart/form-data">
+        {% csrf_token %}
 
-    <!-- General Information -->
-    <fieldset>
-        <legend>General Information</legend>
-        <div class="form-row">
-            <div class="form-field">{{ form.post_type.label_tag }} {{ form.post_type }}</div>
-            <div class="form-field">{{ form.property_type.label_tag }} {{ form.property_type }}</div>
-            <div class="form-field">{{ form.name.label_tag }} {{ form.name }}</div>
-            <div class="form-field">{{ form.Building_Age.label_tag }} {{ form.Building_Age }}</div>
-            <div class="form-field">{{ form.property_price.label_tag }} {{ form.property_price }}</div>
-            <div class="form-field">{{ form.length.label_tag }} {{ form.length }}</div>
-            <div class="form-field">{{ form.breadth.label_tag }} {{ form.breadth }}</div>
-            <div class="form-field">{{ form.area.label_tag }} {{ form.area }}</div>
-            <!-- Add more general fields -->
-        </div>
-    </fieldset>
-
-    <!-- Address -->
-    <fieldset>
-        <legend>Address</legend>
-        <div class="form-row">
-            <div class="form-field">{{ form.country.label_tag }} {{ form.country }}</div>
-            <div class="form-field">{{ form.state.label_tag }} {{ form.state }}</div>
-            <div class="form-field">{{ form.city.label_tag }} {{ form.city }}</div>
-            <div class="form-field">{{ form.county.label_tag }} {{ form.county }}</div>
-            <div class="form-field">{{ form.address.label_tag }} {{ form.address }}</div>
-        </div>
-    </fieldset>
-
-    <!-- Basic Information Of Property -->
-    <fieldset>
-        <legend>Basic Information Of Property</legend>
-        <div class="form-row">
-            <div class="form-field">Property Info :  {{ form.proprty_info }}</div>
-            <div class="form-field">Property Status : {{ form.proprty_status }}</div>
-            <div class="form-field">{{ form.No_of_floors.label_tag }} {{ form.No_of_floors }}</div>
-            <div class="form-field">{{ form.for_family.label_tag }} {{ form.for_family }}</div>
-            <div class="form-field">{{ form.for_business.label_tag }} {{ form.for_business }}</div>
-            <div class="form-field">{{ form.pet_friendly.label_tag }} {{ form.pet_friendly }}</div>
-            <div class="form-field">{{ form.parking.label_tag }} {{ form.parking }}</div>
-            <div class="form-field">{{ form.facing.label_tag }} {{ form.facing }}</div>
-            <div class="form-field">{{ form.furnish_detail.label_tag }} {{ form.furnish_detail }}</div>
-            <div class="form-field">{{ form.garden.label_tag }} {{ form.garden }}</div>
-            <div class="form-field">{{ form.sunlight_access.label_tag }} {{ form.sunlight_access }}</div>
-            <div class="form-field">{{ form.road_side_parking.label_tag }} {{ form.road_side_parking }}</div>
-            <div class="form-field">{{ form.water_drainage.label_tag }} {{ form.water_drainage }}</div>
-            <div class="form-field">{{ form.bed.label_tag }} {{ form.bed }}</div>
-            <div class="form-field">{{ form.bath.label_tag }} {{ form.bath }}</div>
-            <div class="form-field">{{ form.Adjacent_Roads.label_tag }} {{ form.Adjacent_Roads }}</div>
-            <div class="form-field d-flex justify-content-between align-items-center mb-3">
-                <label class="form-label me-3" for="id_description"><b>Property Descriptions</b></label>
-                {{ form.description }}
+        <!-- General Information -->
+        <fieldset>
+            <legend>General Information</legend>
+            <div class="form-row">
+                <div class="form-field">{{ form.post_type.label_tag }} {{ form.post_type }}</div>
+                <div class="form-field">{{ form.property_type.label_tag }} {{ form.property_type }}</div>
+                <div class="form-field">{{ form.name.label_tag }} {{ form.name }}</div>
+                <div class="form-field">{{ form.Building_Age.label_tag }} {{ form.Building_Age }}</div>
+                <div class="form-field">{{ form.property_price.label_tag }} {{ form.property_price }}</div>
+                <div class="form-field">{{ form.length.label_tag }} {{ form.length }}</div>
+                <div class="form-field">{{ form.breadth.label_tag }} {{ form.breadth }}</div>
+                <div class="form-field">{{ form.area.label_tag }} {{ form.area }}</div>
             </div>
-        </div>
-    </fieldset>
+        </fieldset>
+        <hr>
+        
+        <fieldset>
+            <legend>Address</legend>
+            <div class="form-row">
+                <div class="form-field">{{ form.country.label_tag }} {{ form.country }}</div>
+                <div class="form-field">{{ form.state.label_tag }} {{ form.state }}</div>
+                <div class="form-field">{{ form.city.label_tag }} {{ form.city }}</div>
+                <div class="form-field">{{ form.county.label_tag }} {{ form.county }}</div>
+                <div class="form-field">{{ form.address.label_tag }} {{ form.address }}</div>
+            </div>
+        </fieldset>
+        
+                                    <!-- Include jQuery -->
+                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        
+                                    <!-- Include Bootstrap JS -->
+                                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+                    
+                                    <!-- Include Bootstrap-Select JS -->
+                                    <script
+                                        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+                                        
+                                    <script>
+                                        $(document).ready(function () {
+                                            // Fetch countries and populate the country dropdown
+                                            $.ajax({
+                                                url: '/api/countries/',
+                                                method: 'GET',
+                                                success: function (data) {
+                                                    let options = '<option value="">Select a Country</option>';
+                                                    data.forEach(country => {
+                                                        options += `<option value="${country.id}">${country.name}</option>`;
+                                                    });
+                                                    $('#country').html(options);
+                                                    $('#country').selectpicker('refresh');
+                                                },
+                                                error: function (xhr, status, error) {
+                                                    console.error('Error fetching countries:', error);
+                                                    alert('An error occurred while fetching countries.');
+                                                }
+                                            });
+                                        
+                                            // Fetch states when country is selected
+                                            $('#country').change(function () {
+                                                const countryId = $(this).val();
+                                                const countryName = $("#country option:selected").text();  // Get the name of the country
+                                                $('#hiddenCountry').val(countryName);  // Update the hidden field with the name
+                                        
+                                                if (countryId) {
+                                                    $.ajax({
+                                                        url: `/api/states/${countryId}/`,
+                                                        method: 'GET',
+                                                        success: function (data) {
+                                                            let options = '<option value="">Select a State</option>';
+                                                            data.forEach(state => {
+                                                                options += `<option value="${state.id}">${state.name}</option>`;
+                                                            });
+                                                            $('#state').html(options);
+                                                            $('#state').prop('disabled', false);
+                                                            $('#state').selectpicker('refresh');
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.error('Error fetching states:', error);
+                                                            alert('An error occurred while fetching states.');
+                                                        }
+                                                    });
+                                                } else {
+                                                    $('#state').html('<option value="">Select a State</option>');
+                                                    $('#state').prop('disabled', true);
+                                                    $('#state').selectpicker('refresh');
+                                                }
+                                            });
+                                        
+                                            // Fetch cities when state is selected
+                                            $('#state').change(function () {
+                                                const stateId = $(this).val();
+                                                const stateName = $("#state option:selected").text();  // Get the name of the state
+                                                $('#hiddenState').val(stateName);  // Update the hidden field with the name
+                                        
+                                                if (stateId) {
+                                                    $.ajax({
+                                                        url: `/api/cities/${stateId}/`,
+                                                        method: 'GET',
+                                                        success: function (data) {
+                                                            let options = '<option value="">Select a City</option>';
+                                                            data.forEach(city => {
+                                                                options += `<option value="${city.id}">${city.name}</option>`;
+                                                            });
+                                                            $('#city').html(options);
+                                                            $('#city').prop('disabled', false);
+                                                            $('#city').selectpicker('refresh');
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.error('Error fetching cities:', error);
+                                                            alert('An error occurred while fetching cities.');
+                                                        }
+                                                    });
+                                                } else {
+                                                    $('#city').html('<option value="">Select a City</option>');
+                                                    $('#city').prop('disabled', true);
+                                                    $('#city').selectpicker('refresh');
+                                                }
+                                            });
+                                        
+                                            // Fetch counties when city is selected
+                                            $('#city').change(function () {
+                                                const cityId = $(this).val();
+                                                const cityName = $("#city option:selected").text();  // Get the name of the city
+                                                $('#hiddenCity').val(cityName);  // Update the hidden field with the name
+                                        
+                                                if (cityId) {
+                                                    $.ajax({
+                                                        url: `/api/counties/${cityId}/`,
+                                                        method: 'GET',
+                                                        success: function (data) {
+                                                            let options = '<option value="">Select a County</option>';
+                                                            data.forEach(county => {
+                                                                options += `<option value="${county.id}">${county.name}</option>`;
+                                                            });
+                                                            $('#county').html(options);
+                                                            $('#county').prop('disabled', false);
+                                                            $('#county').selectpicker('refresh');
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.error('Error fetching counties:', error);
+                                                            alert('An error occurred while fetching counties.');
+                                                        }
+                                                    });
+                                                } else {
+                                                    $('#county').html('<option value="">Select a County</option>');
+                                                    $('#county').prop('disabled', true);
+                                                    $('#county').selectpicker('refresh');
+                                                }
+                                            });
+                                        
+                                            // Fetch addresses when county is selected
+                                            $('#county').change(function () {
+                                                const countyId = $(this).val();
+                                                const countyName = $("#county option:selected").text();  // Get the name of the county
+                                                $('#hiddenCounty').val(countyName);  // Update the hidden field with the name
+                                        
+                                                if (countyId) {
+                                                    $.ajax({
+                                                        url: `/api/addresses/${countyId}/`,
+                                                        method: 'GET',
+                                                        success: function (data) {
+                                                            let options = '<option value="">Select an Address</option>';
+                                                            data.forEach(address => {
+                                                                options += `<option value="${address.id}">${address.name}</option>`;
+                                                            });
+                                                            $('#address').html(options);
+                                                            $('#address').prop('disabled', false);
+                                                            $('#address').selectpicker('refresh');
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.error('Error fetching addresses:', error);
+                                                            alert('An error occurred while fetching addresses.');
+                                                        }
+                                                    });
+                                                } else {
+                                                    $('#address').html('<option value="">Select an Address</option>');
+                                                    $('#address').prop('disabled', true);
+                                                    $('#address').selectpicker('refresh');
+                                                }
+                                            });
+                                        
+                                            // Fetch address when address is selected
+                                            $('#address').change(function () {
+                                                const addressId = $(this).val();
+                                                const addressName = $("#address option:selected").text();  // Get the name of the address
+                                                $('#hiddenAddress').val(addressName);  // Update the hidden field with the name
+                                            });
+                                        });
+                                        
+                                    </script>
+                                        
+                <hr>
+                <!-- Basic Information Of Property -->
+                <fieldset>
+                    <legend>Basic Information Of Property</legend>
+                    <div class="form-row">
+                        <div class="form-field">Property Info : {{ form.proprty_info }}</div>
+                        <div class="form-field">Property Status : {{ form.proprty_status }}</div>
+                        <div class="form-field">{{ form.No_of_floors.label_tag }} {{ form.No_of_floors }}</div>
+                        <div class="form-field">{{ form.for_family.label_tag }} {{ form.for_family }}</div>
+                        <div class="form-field">{{ form.for_business.label_tag }} {{ form.for_business }}</div>
+                        <div class="form-field">{{ form.pet_friendly.label_tag }} {{ form.pet_friendly }}</div>
+                        <div class="form-field">{{ form.parking.label_tag }} {{ form.parking }}</div>
+                        <div class="form-field">{{ form.facing.label_tag }} {{ form.facing }}</div>
+                        <div class="form-field">{{ form.furnish_detail.label_tag }} {{ form.furnish_detail }}</div>
+                        <div class="form-field">{{ form.garden.label_tag }} {{ form.garden }}</div>
+                        <div class="form-field">{{ form.sunlight_access.label_tag }} {{ form.sunlight_access }}</div>
+                        <div class="form-field">{{ form.road_side_parking.label_tag }} {{ form.road_side_parking }}</div>
+                        <div class="form-field">{{ form.water_drainage.label_tag }} {{ form.water_drainage }}</div>
+                        <div class="form-field">{{ form.bed.label_tag }} {{ form.bed }}</div>
+                        <div class="form-field">{{ form.bath.label_tag }} {{ form.bath }}</div>
 
-     <!-- Property_Features -->
-     <fieldset>
-        <legend>Property Features</legend>
-        <div class="form-row">
-            <div class="form-field"> Balcony:  {{ form.balcony }}</div>
-            <div class="form-field">Basement: {{ form.basement }}</div>
-            <div class="form-field">Roof Condition: {{ form.roof_condition }}</div>
-            <div class="form-field">Window Type :{{ form.window }}</div>
-            <div class="form-field">{{ form.flooring.label_tag }} {{ form.flooring }}</div>
-            <div class="form-field">Ceiling Condition: {{ form.ceiling_condition }}</div>
-            <div class="form-field">Property Features Descriptions {{ form.Property_Features_descriptions }}</div>
-        </div>
-    </fieldset>
+                        
+                        <div class="form-field">{{ form.Adjacent_Roads.label_tag }} {{ form.Adjacent_Roads }}</div>
+                        <div class="form-field d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label me-3" for="id_description"><b>Property Descriptions</b></label>
+                            {{ form.description }}
+                        </div>
+                    </div>
+                </fieldset>
+                <hr>
+        <!-- Property_Features -->
+        <fieldset>
+                    <legend>Property Features</legend>
+                    <div class="form-row">
+                        <div class="form-field">
+                            Balcony: 
+                            {{ form.balcony }}
+                        </div>
+                        <div id="balcony-dialog" style="display: none; border: 1px solid #ddd; padding: 15px; border-radius: 5px; background: #f9f9f9; margin-top: 10px;">
+                            <p><strong>Additional Information Required for Balcony:</strong></p>
+                            <label for="balcony-details">Details:</label>
+                            <input type="text" id="balcony-details" name="balcony_details" placeholder="Provide more details about the balcony">
+                        </div>
 
-     <!-- Environmental Factors -->
-     <fieldset>
-        <legend>Environmental Factors</legend>
-        <div class="form-row">
-            <div class="form-field"> Air Pollution Levels:   {{ form.air_Pollution_Levels }}</div>
-            <div class="form-field">Noise Pollution:  {{ form.Noise_Pollution }}</div>
-            <div class="form-field">Roof Condition: {{ form.roof_condition }}</div>
-            <div class="form-field">Flood Zone : {{ form.Flood_Zone }}</div>
-            <div class="form-field">Earthquake Zone:  {{ form.Earthquake_zone }}</div>
-            <div class="form-field">Environmental Factors Descriptions : {{ form.Property_Features_descriptions }}</div>
-        </div>
-    </fieldset>
+                        <div class="form-field">Basement: {{ form.basement }}</div>
+                        <div class="form-field">Roof Condition: {{ form.roof_condition }}</div>
+                        <div class="form-field">Window Type: {{ form.window }}</div>
+                        <div class="form-field">{{ form.flooring.label_tag }} {{ form.flooring }}</div>
+                        <div class="form-field">Ceiling Condition: {{ form.ceiling_condition }}</div>
+                        <div class="form-field">
+                             Descriptions {{ form.Property_Features_descriptions }}
+                        </div>
+                    </div>
+                </fieldset>
+        
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function () {
+                const balconyField = document.querySelector('#id_balcony');  // Select field for 'balcony'
+                const descriptionField = document.querySelector('#id_Property_Features_descriptions');  // Text input for description
+        
+                // Function to update the description field based on the 'balcony' value
+                function updateDescription() {
+                    const selectedValue = balconyField.value;  // Get the selected value of the dropdown
+        
+                    if (selectedValue === 'Yes') {  // If 'Yes' (True) is selected
+                        const options = ['large', 'medium', 'small', 'view'];
+                        descriptionField.value = "Balcony: " + options.join(", ");
+                    } else if (selectedValue === 'False') {  // If 'No' (False) is selected
+                        descriptionField.value = "";  // Clear the description
+                    } else {  // If 'Unknown' is selected (None or blank)
+                        descriptionField.value = "";  // Clear the description
+                    }
+                }
+        
+                // Ensure the description field is populated on page load based on the default value of 'balcony'
+                updateDescription();
+        
+                // Update the description when the user changes the 'balcony' dropdown value
+                balconyField.addEventListener('change', function () {
+                    updateDescription();
+                });
+            });
+        </script>
+        
+                <hr>
 
-    <!-- Accessibility -->
-    <fieldset>
-        <legend>Accessibility</legend>
-        <div class="form-row">
-            <div class="form-field">Public Transportation: {{ form.public_transportation }}</div>
-            <div class="form-field">Handicap Accessibility: {{ form.handicap_accesibility }}</div>
-            <div class="form-field">Proximity to Airport: {{ form.proximity_to_airport }}</div>
-            <div class="form-field">Road Quality: {{ form.road_quality }}</div>
-            <div class="form-field">Accessibility Descriptions: {{ form.Accessebility_descriptions }}</div>
-        </div>
-    </fieldset>
+        <!-- Environmental Factors -->
+        <fieldset>
+            <legend>Environmental Factors</legend>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="id_Air_Pollution_Levels">Air Pollution Levels:</label>
+                    <input type="text" name="air_Pollution_Levels" id="id_air_Pollution_Levels" class="form-control" placeholder="Air Pollution Levels will be displayed here">
+                </div>
+                
 
-    <!-- Safety and security -->
-    <fieldset>
-        <legend>Safety and Security</legend>
-        <div class="form-row">
-            <div class="form-field">Neighborhood Crime Rate: {{ form.Neighborhood_Crime_Rate }}</div>
-            <div class="form-field">Police Station Proximity: {{ form.Police_Station_Proximity }}</div>
-            <div class="form-field">Fire Station Proximity: {{ form.Fire_Station_Proximity }}</div>
-            <div class="form-field">Security Features: {{ form.Security_Features }}</div>
-            <div class="form-field">Safety and Security Descriptions: {{ form.Safety_security_descriptions }}</div>
-        </div>
-    </fieldset>
-    
+                <div class="form-field">
+                    <label for="id_Noise_Pollution">Noise Pollution:</label>
+                    <input type="text" name="Noise_Pollution" id="id_Noise_Pollution" class="form-control" placeholder="Noise Pollution Levels will be displayed here">
+                    <!-- {{form.Noise_Pollution}} -->
+                </div>
 
-    <!-- Technology and Connectivity -->
-    <fieldset>
-        <legend>Technology and Connectivity</legend>
-        <div class="form-row">
-            <div class="form-field">Internet Speed: {{ form.Internet_Speed }}</div>
-            <div class="form-field">Cell Network Coverage: {{ form.Cell_Network_Coverage }}</div>
-            <div class="form-field">Electric Vehicle Charging: {{ form.Electric_Vehicle_Charging }}</div>
-            <div class="form-field">Smart Home Features: {{ form.Smart_Home_Features }}</div>
-            <div class="form-field">Technology and Connectivity Descriptions: {{ form.Technoly_connectivity_descriptions }}</div>
-        </div>
-    </fieldset>
-    
+                <div class="form-field">
+                    <label for="id_Flood_Zone">Flood Zone:</label>
+                    <input type="text" name="Flood_Zone" id="id_Flood_Zone" class="form-control" placeholder="Flood Zone information will be displayed here">
+                    <!-- {{form.Flood_Zone}} -->
+                </div>
+                <div class="form-field">
+                    <label for="id_Earthquake_zone">Earthquake Zone:</label>
+                    <input type="text" name="Earthquake_zone" id="id_Earthquake_zone" class="form-control" placeholder="Earthquake Zone information will be displayed here">
+                </div>
+                <div class="form-field"> Descriptions : {{ form.Property_Features_descriptions }}
+                </div>
+            </div>
+        </fieldset>
+        <hr>
+        <!-- Accessibility -->
+        <fieldset>
+            <legend>Accessibility</legend>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="id_Proximity_to_Public_Transit">Proximity to Public Transit:</label>
+                    <input type="text" name="public_transportation" id="id_Proximity_to_Public_Transit" class="form-control" placeholder="Public Transit proximity will be displayed here">
+                    <!-- {{form.public_transportation}} -->
+                </div>
 
-    <!-- Community and Social Life -->
-    <fieldset>
-        <legend>Community and Social Life</legend>
-        <div class="form-row">
-            <div class="form-field">Community Events: {{ form.Community_Events }}</div>
-            <div class="form-field">Neighborhood Vibe: {{ form.Neighborhood_Vibe }}</div>
-            <div class="form-field">Social Clubs and Groups: {{ form.Social_Clubs_and_Groups }}</div>
-            <div class="form-field">Community Descriptions: {{ form.community_descriptions }}</div>
-        </div>
-    </fieldset>
-    
+                <div class="form-field">Handicap Accessibility: {{ form.handicap_accesibility }}</div>
+                
+                <div class="form-field">
+                    <label for="id_Proximity_to_Airport">Proximity to Airport:</label>
+                    <input type="text" name="proximity_to_airport" id="id_Proximity_to_Airport" class="form-control" placeholder="Proximity To Airport will be displayed here">
+                   <!-- {{form.proximity_to_airport}} -->
+                </div>
 
-    <!-- Green Spaces and Outdoors -->
-    <fieldset>
-        <legend>Green Spaces and Outdoors</legend>
-        <div class="form-row">
-            <div class="form-field">Proximity to Parks: {{ form.Proximity_to_Parks }}</div>
-            <div class="form-field">Gardens and Greenery: {{ form.Gardens_Greenery }}</div>
-            <div class="form-field">Pet Friendly Areas: {{ form.Pet_Friendly_Areas }}</div>
-            <div class="form-field">Green Spaces and Outdoor Descriptions: {{ form.greenspaces_and_outdoor_descriptions }}</div>
-        </div>
-    </fieldset>
-    
+                <div class="form-field">
+                    <label for="id_Road_Quality">Road Quality:</label>
+                    <input type="text" name="road_quality" id="id_Road_Quality" class="form-control" placeholder="Road Quality will be displayed here">
+                    <!-- {{form.road_quality}} -->
+                    
+                </div>
 
-    <!-- Education and Child Care-->
-    <fieldset>
-        <legend>Education and Child Care</legend>
-        <div class="form-row">
-            <div class="form-field">Schools Nearby: {{ form.Schools_Nearby }}</div>
-            <div class="form-field">Childcare Centers: {{ form.Childcare_Centers }}</div>
-            <div class="form-field">Playgrounds: {{ form.Playgrounds }}</div>
-            <div class="form-field">Education Descriptions: {{ form.Education_descriptions }}</div>
-        </div>
-    </fieldset>
-    
+                <div class="form-field"> Descriptions: {{ form.Accessebility_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+        <!-- Safety and security -->
+        <fieldset>
+            <legend>Safety and Security</legend>
+            <div class="form-row">
+                <div class="form-field">
+                <label for="id_Neighborhood_Crime_Rate">Neighborhood Crime Rate:</label>
+                <input type="text" name="Neighborhood_Crime_Rate" id="id_Neighborhood_Crime_Rate" class="form-control" placeholder="Neighborhood Crime Rate will be displayed here">
+                <!-- {{form.Neighborhood_Crime_Rate}} -->
+            </div>
 
-    <!-- Utility and Service Quality -->
-    <fieldset>
-        <legend>Utility and Service Quality</legend>
-        <div class="form-row">
-            <div class="form-field">Electricity Reliability: {{ form.Electricity_Reliability }}</div>
-            <div class="form-field">Water Supply Quality: {{ form.Water_Supply_Quality }}</div>
-            <div class="form-field">Waste Collection: {{ form.Waste_Collection }}</div>
-            <div class="form-field">Utility and Service Quality Descriptions: {{ form.Utility_and_Service_Quality_descriptions }}</div>
-        </div>
-    </fieldset>
+                <div class="form-field">
+                    <label for="id_Police_Station_Proximity">Police Station Proximity:</label>
+                    <input type="text" name="Police_Station_Proximity" id="id_Police_Station_Proximity" class="form-control" placeholder="Police Station proximity will be displayed here">
+                    <!-- {{form.Police_Station_Proximity}} -->
+                </div>
 
-     <!-- Nearby Employment Centers -->
-     <fieldset>
-        <legend>Nearby Employment Centers</legend>
-        <div class="form-row">
-            <div class="form-field">Business District Proximity: {{ form.Business_District_Proximity }}</div>
-            <div class="form-field">Industrial Areas: {{ form.Industrial_Areas }}</div>
-            <div class="form-field">Descriptions: {{ form.Nearby_Employment_Centers_descriptions }}</div>
-        </div>
-    </fieldset>
+                <div class="form-field">
+                <label for="id_Fire_Station_Proximity">Fire Station Proximity:</label>
+                <input type="text" name="Fire_Station_Proximity" id="id_Fire_Station_Proximity" class="form-control" placeholder="Fire Station Proximity will be displayed here">
+                <!-- {{form.Fire_Station_Proximity}} -->
+                </div>
+                
+                <div class="form-field">Security Features: {{ form.Security_Features }}</div>
+                <div class="form-field"> Descriptions: {{ form.Safety_security_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
 
-    <!-- Transportation and Commute -->
-    <fieldset>
-        <legend>Transportation and Commute</legend>
-        <div class="form-row">
-            <div class="form-field">Major Highways Access: {{ form.Major_Highways_Access }}</div>
-            <div class="form-field">Commute Time to Downtown: {{ form.Commute_Time_to_Downtown }}</div>
-            <div class="form-field">Descriptions: {{ form.Transportation_and_Commute_descriptions }}</div>
-        </div>
-    </fieldset>
+        <!-- Technology and Connectivity -->
+        <fieldset>
+            <legend>Technology and Connectivity</legend>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="id_Internet_Speed">Internet Speed:</label>
+                    <input type="text" name="Internet_Speed" id="id_Internet_Speed" class="form-control" placeholder="Internet Speed will be displayed here">
+                    <!-- {{form.Internet_Speed}} -->
+                </div>
+                <div class="form-field">
+                    <label for="id_Cell_Network_Coverage">Cell Network Coverage:</label>
+                    <input type="text" name="Cell_Network_Coverage" id="id_Cell_Network_Coverage" class="form-control" placeholder="Cell Network Coverage will be displayed here">
+                </div>
+                <div class="form-field">Electric Vehicle Charging: {{ form.Electric_Vehicle_Charging }}</div>
+                <div class="form-field">Smart Home Features: {{ form.Smart_Home_Features }}</div>
+                <div class="form-field"> Descriptions: {{form.Technoly_connectivity_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
 
-    <!-- Special Features -->
-    <fieldset>
-        <legend>Special Features</legend>
-        <div class="form-row">
-            <div class="form-field">Historical Building Status: {{ form.Historical_Building_Status }}</div>
-            <div class="form-field">Cultural Heritage Sites: {{ form.Cultural_Heritage_Sites }}</div>
-            <div class="form-field">Luxury Amenities: {{ form.Luxury_Amenities }}</div>
-            <div class="form-field">Descriptions: {{ form.Special_Features_descriptions }}</div>
-        </div>
-    </fieldset>
-
-    <!-- Community Support Services -->
-    <fieldset>
-        <legend>Community Support Services</legend>
-        <div class="form-row">
-            <div class="form-field">Food Banks: {{ form.Food_Banks }}</div>
-            <div class="form-field">Community Centers: {{ form.Community_Centers }}</div>
-            <div class="form-field">Descriptions: {{ form.Community_Support_Services_descriptions }}</div>
-        </div>
-    </fieldset>
-
-    <!-- Weather-Related Factors -->
-    <fieldset>
-        <legend>Weather-Related Factors</legend>
-        <div class="form-row">
-            <div class="form-field">Average Annual Rainfall: {{ form.Average_Annual_Rainfall }}</div>
-            <div class="form-field">Snowfall: {{ form.Snowfall }}</div>
-            <div class="form-field">Descriptions: {{ form.Weather_Related_Factors_descriptions }}</div>
-        </div>
-    </fieldset>
-
-    <!-- Parking and Transportation -->
-    <fieldset>
-        <legend>Parking and Transportation</legend>
-        <div class="form-row">
-            <div class="form-field">Assigned Parking: {{ form.Assigned_Parking }}</div>
-            <div class="form-field">Bicycle Parking: {{ form.Bicycle_Parking }}</div>
-            <div class="form-field">Descriptions: {{ form.Parking_and_Transportation_descriptions }}</div>
-        </div>
-    </fieldset>
-    
-    <!-- Images -->
-    <fieldset>
-        <legend>Images</legend>
-        <!-- Image Upload Row -->
-        <label for="images">Upload Images:</label>
-        <input type="file" name="images" multiple>
-    </fieldset>
+        <!-- Community and Social Life -->
+        <fieldset>
+            <legend>Community and Social Life</legend>
+            <div class="form-row">
+                <div class="form-field">Community Events: {{ form.Community_Events }}</div>
+                <div class="form-field">Neighborhood Vibes: {{ form.Neighborhood_Vibe }}</div>
+                <div class="form-field">Social Clubs and Groups: {{ form.Social_Clubs_and_Groups }}</div>
+                <div class="form-field"> Descriptions: {{ form.community_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
 
 
-    <fieldset>
-            <!-- Map Picker -->
+        <!-- Green Spaces and Outdoors -->
+        <fieldset>
+            <legend>Green Spaces and Outdoors</legend>
+            <div class="form-row">
+
+                <div class="form-field">
+                    <label for="id_Proximity_to_Parks">Proximity to Parks:</label>
+                    <input type="text" name="Proximity_to_Parks" id="id_Proximity_to_Parks" class="form-control" placeholder="Proximity to Parks will be displayed here">
+                </div>
+                <div class="form-field">Gardens and Greenery: {{ form.Gardens_Greenery }}</div>
+                <div class="form-field">Pet Friendly Areas: {{ form.Pet_Friendly_Areas }}</div>
+                <div class="form-field"> Descriptions: {{form.greenspaces_and_outdoor_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+
+
+        <!-- Education and Child Care-->
+        <fieldset>
+            <legend>Education and Child Care</legend>
+            <div class="form-row">
+                
+                <div class="form-field">
+                    <label for="id_Schools_Nearby">Schools Nearby:</label>
+                    <textarea name="Schools_Nearby" id="id_Schools_Nearby" class="form-control" rows="4" placeholder="Schools Nearby will be listed here."></textarea>
+                    <script type="text/javascript">
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const addressField = document.querySelector('#address');  // Address dropdown
+                            const schoolsField = document.querySelector('#id_Schools_Nearby');  // Schools Nearby textarea
+                        
+                            // Function to handle address change
+                            addressField.addEventListener('change', function () {
+                                const addressId = addressField.value;  // Get the selected address ID
+                                
+                                if (addressId) {
+                                    // Make an AJAX request to get nearby schools for the selected address
+                                    fetch(`/get-nearby-schools/?address_id=${addressId}`)
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            const schools = data.schools || [];
+                                            
+                                            // Clear the existing schools in the textarea
+                                            schoolsField.value = '';
+                                            
+                                            if (schools.length > 0) {
+                                                // Create a comma-separated list of schools
+                                                schoolsField.value = schools.join(', ');
+                                            } else {
+                                                schoolsField.value = 'No nearby schools available';
+                                            }
+                                        })
+                                        .catch(error => console.error('Error fetching nearby schools:', error));
+                                } else {
+                                    schoolsField.value = '';  // Clear the field when no address is selected
+                                }
+                            });
+                        });
+                        
+                    </script>
+                </div>
+                
+                <div class="form-field">Childcare Centers: {{ form.Childcare_Centers }}</div>
+                <div class="form-field">Playgrounds: {{ form.Playgrounds }}</div>
+                <div class="form-field"> Descriptions: {{ form.Education_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+
+
+        <!-- Utility and Service Quality -->
+        <fieldset>
+            <legend>Utility and Service Quality</legend>
+            <div class="form-row">
+                <div class="form-field">Electricity Reliability: {{ form.Electricity_Reliability }}</div>
+                <div class="form-field">Water Supply Quality: {{ form.Water_Supply_Quality }}</div>
+                <div class="form-field">Waste Collection: {{ form.Waste_Collection }}</div>
+                <div class="form-field"> Descriptions: {{form.Utility_and_Service_Quality_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+
+        <!-- Nearby Employment Centers -->
+        <fieldset>
+            <legend>Nearby Employment Centers</legend>
+            <div class="form-row">
+                <!-- <div class="form-field">Business District Proximity: {{ form.Business_District_Proximity }}</div> -->
+
+                <div class="form-field">
+                    <label for="id_Business_District_Proximity">Business District Proximity:</label>
+                    <input type="text" name="Business_District_Proximity" id="id_Business_District_Proximity" class="form-control" placeholder="Business District Proximity will be displayed here">
+                </div>
+                <!-- <div class="form-field">Industrial Areas: {{ form.Industrial_Areas }}</div> -->
+                <div class="form-field">
+                    <label for="id_Industrial_Areas">Industrial Areas:</label>
+                    <input type="text" name="Industrial_Areas" id="id_Industrial_Areas" class="form-control" placeholder="Industrial Areas will be displayed here">
+                </div>
+
+                <div class="form-field">Descriptions: {{ form.Nearby_Employment_Centers_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+
+        <!-- Transportation and Commute -->
+        <fieldset>
+            <legend>Transportation and Commute</legend>
+            <div class="form-row">
+                <!-- <div class="form-field">Major Highways Access: {{ form.Major_Highways_Access }}</div> -->
+                <div class="form-field">
+                    <label for="id_Major_Highways_Access">Major Highways Access:</label>
+                    <input type="text" name="Major_Highways_Access" id="id_Major_Highways_Access" class="form-control" placeholder="Major Highways Access will be displayed here">
+                </div>
+                <!-- <div class="form-field">Commute Time to Downtown: {{ form.Commute_Time_to_Downtown }}</div> -->
+                <div class="form-field">
+                    <label for="id_Commute_Time_to_Downtown">Commute Time to Downtown:</label>
+                    <input type="text" name="Commute_Time_to_Downtown" id="id_Commute_Time_to_Downtown" class="form-control" placeholder="Commute Time to Downtown Access will be displayed here">
+                </div>
+                
+                <div class="form-field">Descriptions: {{ form.Transportation_and_Commute_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+
+        <!-- Special Features -->
+        <fieldset>
+            <legend>Special Features</legend>
+            <div class="form-row">
+                <div class="form-field">Historical Building Status: {{ form.Historical_Building_Status }}</div>
+
+                <div class="form-field">
+                    <label for="id_Historical_Building_Status">Commute Time to Downtown:</label>
+                    <input type="text" name="Historical_Building_Status" id="id_Historical_Building_Status" class="form-control" placeholder="Historical Building Status will be displayed here">
+                </div>
+                
+
+                <div class="form-field">Cultural Heritage Sites: {{ form.Cultural_Heritage_Sites }}</div>
+                <div class="form-field">Luxury Amenities: {{ form.Luxury_Amenities }}</div>
+                <div class="form-field">Descriptions: {{ form.Special_Features_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+
+        <!-- Community Support Services -->
+        <fieldset>
+            <legend>Community Support Services</legend>
+            <div class="form-row">
+                <div class="form-field">Food Banks: {{ form.Food_Banks }}</div>
+                <div class="form-field">Community Centers: {{ form.Community_Centers }}</div>
+                <div class="form-field">Descriptions: {{ form.Community_Support_Services_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+        <!-- Weather-Related Factors -->
+        <fieldset>
+            <legend>Weather-Related Factors</legend>
+            <div class="form-row">
+                <!-- <div class="form-field">Average Annual Rainfall: {{ form.Average_Annual_Rainfall }}</div> -->
+
+                <div class="form-field">
+                    <label for="id_Average_Annual_Rainfall">Average Annual Rainfall:</label>
+                    <input type="text" name="Average_Annual_Rainfall" id="id_Average_Annual_Rainfall" class="form-control" placeholder="Average Annual Rainfall will be displayed here">
+                </div>
+                <!-- <div class="form-field">Snowfall: {{ form.Snowfall }}</div> -->
+                <div class="form-field">
+                    <label for="id_Snowfall">Snowfall:</label>
+                    <input type="text" name="Snowfall" id="id_Snowfall" class="form-control" placeholder="Snowfall will be displayed here">
+                </div>
+                <div class="form-field">Descriptions: {{ form.Weather_Related_Factors_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+
+        <!-- Parking and Transportation -->
+        <fieldset>
+            <legend>Parking and Transportation</legend>
+            <div class="form-row">
+                <div class="form-field">Assigned Parking: {{ form.Assigned_Parking }}</div>
+                <div class="form-field">Bicycle Parking: {{ form.Bicycle_Parking }}</div>
+                <div class="form-field">Descriptions: {{ form.Parking_and_Transportation_descriptions }}</div>
+            </div>
+        </fieldset>
+        <hr>
+
+        <!-- Images -->
+        <fieldset>
+            <legend>Images</legend>
+            <!-- Image Upload Row -->
+            <label for="images">Upload Images:</label>
+            <input type="file" name="images" multiple>
+        </fieldset>
+        <hr>
+
+        <!-- Map Picker -->
+        <!-- <fieldset>
             <div id="map" style="height: 600px; width: 100%;"></div>
-            <!-- Hidden Inputs to Store Latitude and Longitude -->
             <input type="hidden" id="id_lat" name="lat" value="{{ form.lat.value|default:'' }}">
             <input type="hidden" id="id_lng" name="lng" value="{{ form.lng.value|default:'' }}">
-    </fieldset>
+        </fieldset> -->
+        <hr>
+
         <script>
             function initMap() {
                 // Default center for the map (e.g., New York)
                 const defaultLocation = { lat: 40.7128, lng: -74.0060 };
-                
+
                 // Initialize map
                 const map = new google.maps.Map(document.getElementById('map'), {
                     center: defaultLocation,
                     zoom: 13
                 });
-        
+
                 // Marker for selected location
                 let marker = new google.maps.Marker({
                     position: defaultLocation,
                     map: map,
                     draggable: true
                 });
-        
+
                 // Update hidden inputs on marker drag
                 google.maps.event.addListener(marker, 'dragend', function (event) {
                     document.getElementById('id_lat').value = event.latLng.lat();
                     document.getElementById('id_lng').value = event.latLng.lng();
                 });
-        
+
                 // On map click, move the marker and update inputs
                 map.addListener('click', function (event) {
                     const clickedLocation = event.latLng;
@@ -339,9 +642,126 @@
             }
             // Initialize map on page load
             window.onload = initMap;
-                </script>
-                <script src="https://maps.gomaps.pro/maps/api/js?key=AlzaSy-OIuA0NEQEdVKNSZ3Kx1LFx4ZEZ0HltMg"></script>
+        </script>
+        <!-- AlzaSyuYIfNu8s_RDSwT0LPZQQmHh8k36td6rVP -->
+        <!-- <script src="https://maps.gomaps.pro/maps/api/js?key=AlzaSy-OIuA0NEQEdVKNSZ3Kx1LFx4ZEZ0HltMg"></script> -->
+        <br>
+        <button type="submit">Save Property</button>
+    </form>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addressField = document.querySelector('#address');  // Address dropdown
+    
+        // The fields you want to auto-populate
+        const pollutionField = document.querySelector('#id_air_Pollution_Levels');
+        const noisePollutionField = document.querySelector('#id_Noise_Pollution');
+        const floodZoneField = document.querySelector('#id_Flood_Zone');
+        const earthquakeZoneField = document.querySelector('#id_Earthquake_zone');
+        const transitField = document.querySelector('#id_Proximity_to_Public_Transit');
+        const airportField = document.querySelector('#id_Proximity_to_Airport');
 
-    <button type="submit">Save Property</button>
+        const roadQualityField = document.querySelector('#id_Road_Quality');
+        const crimeRateField = document.querySelector('#id_Neighborhood_Crime_Rate');
+        const policeStationField = document.querySelector('#id_Police_Station_Proximity');
+        const fireStationField = document.querySelector('#id_Fire_Station_Proximity');
+        const internetSpeedField = document.querySelector('#id_Internet_Speed');
+        const cellNetworkField = document.querySelector('#id_Cell_Network_Coverage');
+        const parksProximityField = document.querySelector('#id_Proximity_to_Parks');
+        const businessDistrictField = document.querySelector('#id_Business_District_Proximity');
+        const industrialAreasField = document.querySelector('#id_Industrial_Areas');
+        const highwaysAccessField = document.querySelector('#id_Major_Highways_Access');
+        const commuteTimeField = document.querySelector('#id_Commute_Time_to_Downtown');
+        const historicalBuildingField = document.querySelector('#id_Historical_Building_Status');
+        const culturalHeritageField = document.querySelector('#id_Cultural_Heritage_Sites');
+        const annualRainfallField = document.querySelector('#id_Average_Annual_Rainfall');
+        const snowfallField = document.querySelector('#id_Snowfall');
+    
+        // Make sure the address field exists
+        if (addressField) {
+            addressField.addEventListener('change', function () {
+                const addressId = addressField.value;
+    
+                if (addressId) {
+                    fetch(`/get-nearby-info/?address_id=${addressId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Populate the fields with the data from the response
+                            pollutionField.value = data.air_pollution_level || '';
+                            noisePollutionField.value = data.noise_pollution || '';
+                            floodZoneField.value = data.flood_zone || '';
+                            earthquakeZoneField.value = data.earthquake_zone || '';
+                            // Handle other fields if necessary...
+                        })
+
+                    fetch(`/get-nearby-info/?address_id=${addressId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Populate the fields with the data from the response
+                            transitField.value = data.proximity_to_public_transit || '';
+                            airportField.value = data.proximity_to_airport || '';
+                            roadQualityField.value = data.road_quality || '';
+                            crimeRateField.value = data.neighborhood_crime_rate || '';
+                        })
+                    fetch(`/get-nearby-info/?address_id=${addressId}`)
+                            .then(response => response.json())
+                            .then(data => {       
+                            policeStationField.value = data.police_station_proximity || '';
+                            fireStationField.value = data.fire_station_proximity || '';
+                            internetSpeedField.value = data.internet_speed || '';
+                            cellNetworkField.value = data.cell_network_coverage || '';
+                            parksProximityField.value = data.proximity_to_parks || '';
+                        })
+                    fetch(`/get-nearby-info/?address_id=${addressId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                            businessDistrictField.value = data.business_district_proximity || '';
+                            industrialAreasField.value = data.industrial_areas || '';
+                            highwaysAccessField.value = data.major_highways_access || '';
+                            commuteTimeField.value = data.commute_time_to_downtown || '';
+                            historicalBuildingField.value = data.historical_building_status || '';
+                        })
+                    fetch(`/get-nearby-info/?address_id=${addressId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                            culturalHeritageField.value = data.cultural_heritage_sites || '';
+                            annualRainfallField.value = data.average_annual_rainfall || '';
+                            snowfallField.value = data.snowfall || '';
+                            // Handle other fields if necessary...
+                        })
+
+                        .catch(error => console.error('Error fetching nearby information:', error));
+                } else {
+                    // Clear the fields when there's no address selected
+                    pollutionField.value = '';
+                    noisePollutionField.value = '';
+                    floodZoneField.value = '';
+                    earthquakeZoneField.value = '';
+                    transitField.value = '';
+                    airportField.value = '';
+                    roadQualityField.value = '';
+                    crimeRateField.value = '';
+                    policeStationField.value = ''; 
+                    fireStationField.value = '';
+                    internetSpeedField.value = '';
+                    cellNetworkField.value = '';
+                    parksProximityField.value = '';
+                    businessDistrictField.value = '';
+                    industrialAreasField.value = '';
+                    highwaysAccessField.value = '';
+                    commuteTimeField.value = '';
+                    historicalBuildingField.value = '';
+                    culturalHeritageField.value = '';
+                    annualRainfallField.value = '';
+                    snowfallField.value = '';
+                    // Clear other fields if necessary...
+                }
+            });
+        }
+    });
+    
+
+</script>
+    
 </div>
 {% endblock %}

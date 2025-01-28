@@ -1,0 +1,32 @@
+
+
+ul li {
+    margin: 0 7px; /* Add spacing between list items */
+    font-size: 1.0rem; /* Adjust font size */
+}
+
+.num {
+    font-weight: bold; /* Make numeric values stand out */
+    margin-left: 5px; /* Add space between the icon and the number */
+}
+
+i {
+    margin-right: 5px; /* Add space between the icon and text */
+}
+
+/* Chat Button Style */
+.chat-btn {
+    background-color: #4CAF50; 
+    color: white; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    text-align: center; 
+    text-decoration: none; 
+    font-size: 16px; 
+    display: block; 
+    width: 100%;
+    margin-top: 15px;
+}
+.chat-btn:hover {
+    background-color: #45a049; /* Darker shade of green on hover */
+}

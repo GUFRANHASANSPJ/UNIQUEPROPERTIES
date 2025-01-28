@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/confirm_delete.css' %}">
 <div class="container mt-5">
     <h2>Confirm Delete</h2>
     <p>Are you sure you want to delete the property <strong>{{ property.name }}</strong>?</p>

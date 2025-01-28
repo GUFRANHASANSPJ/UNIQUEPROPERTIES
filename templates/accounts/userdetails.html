@@ -34,7 +34,7 @@
                 <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
                 <a href="{% url 'edit_user_details' %}" class="btn btn-primary ms-3">Edit Profile</a>
                 {% if not has_subscription %}
-                    <a href="{% url 'create_subscription' %}" class="btn btn-primary ms-3">Buy Subscription</a>
+                    <a href="{% url 'create_subscription' %}" class="btn ms-3" style=" background-color: #4B3C31; border-radius: 5px;color:white">Buy Subscription</a>
                 {% endif %}
             </div>
         </div>

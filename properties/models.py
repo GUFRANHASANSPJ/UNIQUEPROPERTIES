@@ -31,6 +31,7 @@ class property(models.Model):
     state= models.CharField(null=True,max_length=50)
     county= models.CharField(null=True,max_length=50)
     city= models.CharField(null=True,max_length=50)
+    zipcode= models.CharField(null=True,max_length=50)
     address= models.CharField(null=True,max_length=200)
     lat = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)  # Latitude
     lng = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)  # Longitude
@@ -49,7 +50,7 @@ class property(models.Model):
     proprty_status= models.BooleanField(default=True,null=True, blank=True)
 
     No_of_floors= models.IntegerField(null=True, blank=True)
-    description = models.TextField(default="No description provided", blank=True)
+    description = models.CharField(default="No description provided", max_length=200 , null=True,blank=True)
     for_family= models.BooleanField(default=True,null=True, blank=True)
     for_business= models.BooleanField(default=True,null=True, blank=True)
     pet_friendly=models.BooleanField(default=True,null=True, blank=True)
@@ -87,6 +88,7 @@ class property(models.Model):
     water_drainage =models.BooleanField(default=True,null=True, blank=True)
     bed= models.IntegerField(null=True, blank=True)
     bath= models.IntegerField(null=True, blank=True)
+    lift= models.BooleanField(default=True,null=True, blank=True)
 
     image=models.ImageField(upload_to='properties_img/',blank=True,null=True)
     images = models.JSONField(default=list, blank=True,null=True)  # Stores image paths as a list in JSON
@@ -130,10 +132,10 @@ class property(models.Model):
         ('Moderate', 'Moderate'),
         ('High', 'High'),
     ]
-    air_Pollution_Levels= models.CharField(null=True, choices=air_Pollution_type, max_length=100, blank=True)
-    Noise_Pollution= models.CharField(null=True,max_length=100, choices=Noise_Pollution_type,blank=True)
-    Flood_Zone=models.BooleanField(default=False,null=True, blank=True)
-    Earthquake_zone=models.BooleanField(default=False,null=True, blank=True)
+    air_Pollution_Levels= models.CharField(null=True, max_length=100, blank=True)
+    Noise_Pollution= models.CharField(null=True,max_length=100,blank=True)
+    Flood_Zone=models.CharField(null=True,max_length=100, blank=True)
+    Earthquake_zone=models.CharField(null=True,max_length=100, blank=True)
     Environmental_Factors_descriptions= models.CharField(null=True,max_length=200, blank=True)
 
     #Accessebility
@@ -149,7 +151,7 @@ class property(models.Model):
         ('Paved', 'Paved'),
         ('Unpaved', 'Unpaved'),
     ]
-    road_quality= models.CharField(null=True,max_length=100, choices=road_quality_type,blank=True)
+    road_quality= models.CharField(null=True,max_length=100,blank=True)
     Accessebility_descriptions= models.CharField(null=True,max_length=200, blank=True)
 
     #Safety and security
@@ -158,7 +160,7 @@ class property(models.Model):
         ('Moderate', 'Moderate'),
         ('High', 'High'),
     ]
-    Neighborhood_Crime_Rate= models.CharField(null=True,max_length=100,choices=Neighborhood_Crime_Rate_type, blank=True)
+    Neighborhood_Crime_Rate= models.CharField(null=True,max_length=100, blank=True)
     Police_Station_Proximity= models.CharField(null=True,max_length=100, blank=True)
     Fire_Station_Proximity= models.CharField(null=True,max_length=100, blank=True)
     Security_Features= models.CharField(null=True,max_length=100, blank=True)
@@ -170,13 +172,13 @@ class property(models.Model):
         ('Moderate', 'Moderate'),
         ('High', 'High'),
     ]
-    Internet_Speed= models.CharField(null=True,max_length=100, choices=Internet_Speed_type, blank=True)
+    Internet_Speed= models.CharField(null=True,max_length=100, blank=True)
     Cell_Network_Coverage_type = [
         ('Good', 'Good'),
         ('Fair', 'Fair'),
         ('Poor', 'Poor'),
     ]
-    Cell_Network_Coverage= models.CharField(null=True,max_length=100,choices=Cell_Network_Coverage_type, blank=True)
+    Cell_Network_Coverage= models.CharField(null=True,max_length=100, blank=True)
     Electric_Vehicle_Charging= models.BooleanField(default=True,null=True, blank=True)
     Smart_Home_Features= models.JSONField(default=list, blank=True)
     Technoly_connectivity_descriptions= models.CharField(null=True,max_length=200, blank=True)
@@ -258,8 +260,8 @@ class property(models.Model):
         ('Nearby', 'Nearby'),
         ('Not Nearby', 'Not Nearby'),
     ]
-    Historical_Building_Status= models.CharField(null=True,max_length=100,choices=Historical_Building_Status_type, blank=True)
-    Cultural_Heritage_Sites= models.CharField(null=True,max_length=100,choices=Cultural_Heritage_Sites_type, blank=True)    
+    Historical_Building_Status= models.CharField(null=True,max_length=100,blank=True)
+    Cultural_Heritage_Sites= models.CharField(null=True,max_length=100, blank=True)    
     Luxury_Amenities= models.JSONField(default=list, blank=True)   
     Special_Features_descriptions= models.CharField(null=True,max_length=200, blank=True)
 
@@ -343,6 +345,54 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
+    
+class County(models.Model):
+    name = models.CharField(max_length=100)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='county')
+
+    def __str__(self):
+        return self.name
+    
+class Address (models.Model):
+    name = models.CharField(max_length=100)
+    county = models.ForeignKey(County, on_delete=models.CASCADE, related_name='address')
+
+    
+class Nearby(models.Model):
+    address = models.ForeignKey(Address, on_delete=models.CASCADE,null=True, related_name='nearby_places')
+    
+    # JSON fields to store lists of nearby places (you can also use ArrayField for simple lists)
+    nearby_schools = models.JSONField(default=list)  # To store multiple schools in a JSON array
+    nearby_hospitals = models.JSONField(default=list)  # To store multiple hospitals in a JSON array
+    nearby_bus_stops = models.JSONField(default=list)  # To store multiple bus stops
+    nearby_police_stations = models.JSONField(default=list)  # To store multiple police stations
+    nearby_railway = models.JSONField(default=list)  # To store multiple railway stations
+    nearby_gardens = models.JSONField(default=list)  # To store multiple gardens
+
+    Air_Pollution_Levels=models.CharField(null=True,max_length=200, blank=True)
+    Noise_Pollution = models.CharField(null=True, max_length=200, blank=True)
+    Flood_Zone = models.CharField(null=True, max_length=200, blank=True)
+    Earthquake_Zone = models.CharField(null=True, max_length=200, blank=True)
+    Proximity_to_Public_Transit = models.CharField(null=True, max_length=200, blank=True)
+    Proximity_to_Airport = models.CharField(null=True, max_length=200, blank=True)
+    Road_Quality = models.CharField(null=True, max_length=200, blank=True)
+    Neighborhood_Crime_Rate = models.CharField(null=True, max_length=200, blank=True)
+    Police_Station_Proximity = models.CharField(null=True, max_length=200, blank=True)
+    Fire_Station_Proximity = models.CharField(null=True, max_length=200, blank=True)
+    Internet_Speed = models.CharField(null=True, max_length=200, blank=True)
+    Cell_Network_Coverage = models.CharField(null=True, max_length=200, blank=True)
+    Proximity_to_Parks = models.CharField(null=True, max_length=200, blank=True)
+    Business_District_Proximity = models.CharField(null=True, max_length=200, blank=True)
+    Industrial_Areas = models.CharField(null=True, max_length=200, blank=True)
+    Major_Highways_Access = models.CharField(null=True, max_length=200, blank=True)
+    Commute_Time_to_Downtown = models.CharField(null=True, max_length=200, blank=True)
+    Historical_Building_Status = models.CharField(null=True, max_length=200, blank=True)
+    Cultural_Heritage_Sites = models.CharField(null=True, max_length=200, blank=True)
+    Average_Annual_Rainfall = models.CharField(null=True, max_length=200, blank=True)
+    Snowfall = models.CharField(null=True, max_length=200, blank=True)
+
+    # def __str__(self):
+    #     return f"Nearby places in {self.county.name}"
 
 class Pincode(models.Model):
     pincode = models.CharField(max_length=10)
@@ -350,3 +400,17 @@ class Pincode(models.Model):
 
     def __str__(self):
         return self.pincode
+    
+class Message(models.Model):
+    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    Property = models.ForeignKey(property, related_name='messages', on_delete=models.CASCADE)
+    message_body = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Message from {self.sender.username} to {self.receiver.username} on {self.timestamp}'
+
+    class Meta:
+        ordering = ['timestamp']
+

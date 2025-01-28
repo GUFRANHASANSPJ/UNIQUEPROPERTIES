@@ -1,0 +1,79 @@
+.profile-icon {
+    margin-top: -25%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-block;
+    border: 2px solid #fff;
+    transition: transform 0.3s ease;
+    position: relative; /* Ensures proper positioning of text or image */
+    background-color: white; /* Default background for initials */
+    color: black; /* Text color for initials */
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase; /* Uppercase initials */
+}
+
+/* Profile image inside the icon */
+.profile-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+}
+
+/* Bounce animation */
+.bounce-on-click.active .profile-icon {
+    animation: bounce-on-click 0.3s ease;
+}
+
+@keyframes bounce-on-click {
+    0% { transform: scale(1); }
+    20% { transform: scale(1.2); }
+    50% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+/* Profile image hover effect */
+.profile-img:hover {
+    transform: scale(1.1);
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 25px;
+    right: 2rem;
+    background-color: #ccc;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 200px;
+}
+body {
+    background-color: rgb(55, 65, 65);
+}
+.dropdown-menu .dropdown-item {
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+}
+
+/* Show dropdown on hover */
+.nav-item:hover .dropdown-menu {
+    display: block;
+}

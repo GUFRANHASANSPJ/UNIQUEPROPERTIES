@@ -1,23 +1,277 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    >
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css" crossorigin="anonymous" />
+<style>
+    .iti__selected-flag {
+        top: 6px;
+        height: 33px !important;
+        border-radius: 4px;
+        transition: .3s;
+    }
+    input#phone {
+        padding-left: 47px !important;
+          top: 6px;
+    }  
+    .intl-tel-input .flag-dropdown .selected-flag {
+      padding: 11px 16px 11px 6px;
+    }
+    .intl-tel-input {
+      z-index: 99;
+      width: 100%;
+    }
+    .iti-flag {
+      box-shadow: none;
+    }
+    .intl-tel-input .selected-flag:focus {
+      outline: none;
+    }
+    .iti--allow-dropdown .iti__flag-container:hover .iti__selected-flag {
+        background-color: rgba(0, 0, 0, 0.05);
+    }  
+    .iti--allow-dropdown input{
+        padding-right: 6px;
+        padding-left: 52px;
+        margin-left: 0;
+    }
+    .iti__country-list {
+        border-radius: 4px !important;
+        z-index: 999 !important;
+        box-shadow: 0 0 16px 0 rgb(0 0 0 / 8%) !important;
+        border: 1px solid #ececec !important;
+          width: 270px !important;
+    }
+
+
+    .form-control {
+      max-width: 400px; /* Set the maximum width for input fields */
+      width: 100%; /* Ensure responsiveness */
+      padding-right: 40px; /* Leave space for the icon */
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+  
+  /* Shared styles for toggle-password */
+  .toggle-password {
+      position: absolute;
+      cursor: pointer;
+      color: #6c757d;
+  }
+  
+  /* Specific styles for the password field icon */
+  .password-icon {
+      right: 300px;
+      top: -112px; /* Adjust the vertical position */
+      transform: translateY(-50%);
+  }
+  
+  /* Specific styles for the confirm password field icon */
+  .confirm-password-icon {
+      right: 300px;
+      top: -30px; /* Adjust the vertical position independently */
+      transform: translateY(-70%);
+  }
+  .container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    min-height: 40vh/* Full height of the viewport */
+  }
+
+  /* Limit the size of the jumbotron */
+  .jumbotron {
+  background-color: #e5e2e0; /* Set your desired background color (Bootstrap primary color) */
+  color: #070000; /* Optional: White text color for better contrast */
+  padding: 2rem;
+  border-radius: 8px; /* Optional: Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
+  max-width: 750px; /* Limit the width */
+  width: 100%; /
+  }
+
+</style>
+    
 <br>
 <div class="container">
     <div class="jumbotron">
-        <h1 class="mb-4" style="text-align: center;">Registration Form</h1 >
+        <h1 class="mb-4 text-center">Owner Registration Form</h1>
 
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form1|crispy }}
+            <!-- Password Field -->
+            <div class="form-group mb-3 position-relative">
+              {{ form.password.label_tag }}
+              {{ form.password }}
+              <span class="toggle-password password-icon position-absolute" data-toggle="#id_password">
+                  <i class="fa fa-eye"></i>
+              </span>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="form-group mb-3 position-relative">
+              <!-- {{ form.confirm_password.label_tag }} -->
+              <!-- {{ form.confirm_password }} -->
+              <span class="toggle-password confirm-password-icon position-absolute" data-toggle="#id_confirm_password">
+                  <i class="fa fa-eye"></i>
+              </span>
+            </div>
+
+            <div class="form-group mb-3 position-relative">
+              {{ form.email.label_tag }}
+              {{ form.email }}
+              <small id="emailError" class="text-danger d-none">Please enter a valid email address.</small>
+              <span 
+                  id="emailVerifyText" 
+                  class="position-absolute text-primary fw-bold" 
+                  style="top: -188px; right: 300px; transform: translateY(-50%); cursor: pointer;" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#emailVerificationModal">
+                  Verify
+              </span>
+          </div>
+            <div class="form-group mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input
+                    id="phone"
+                    type="tel"
+                    name="phone"
+                    class="form-control"
+                    placeholder="Enter your phone number"
+                    required
+                />
+            </div>
             {{ form2|crispy }}
             <div class="text-center mt-3">
-                <input type="submit" class="btn btn-success" value="Submit">
+                <input type="submit" class="btn" style=" background-color: #4B3C31; border-radius: 5px;color:white" value="Submit">
             </div>
         </form>
     </div>
+
 </div>
+<br><br>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js'></script>
+
+<script>
+// International telephone format
+// $("#phone").intlTelInput();
+// get the country data from the plugin
+var countryData = window.intlTelInputGlobals.getCountryData(),
+  input = document.querySelector("#phone"),
+  addressDropdown = document.querySelector("#country");
+
+// init plugin
+var iti = window.intlTelInput(input, {
+  hiddenInput: "full_phone",
+  utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js" // just for formatting/placeholders etc
+});
+
+// populate the country dropdown
+for (var i = 0; i < countryData.length; i++) {
+  var country = countryData[i];
+  var optionNode = document.createElement("option");
+  optionNode.value = country.iso2;
+  var textNode = document.createTextNode(country.name);
+  optionNode.appendChild(textNode);
+  addressDropdown.appendChild(optionNode);
+}
+// set it's initial value
+addressDropdown.value = iti.getSelectedCountryData().iso2;
+
+// listen to the telephone input for changes
+input.addEventListener('countrychange', function(e) {
+  addressDropdown.value = iti.getSelectedCountryData().iso2;
+});
+
+// listen to the address dropdown for changes
+addressDropdown.addEventListener('change', function() {
+  iti.setCountry(this.value);
+});
+</script>
+
+<script>
+//Append Value To Phone Field
+$("#phone").prop('value', '+1 ');
+</script>
+
+<script>
+  // Toggle Password Visibility
+  document.querySelectorAll('.toggle-password').forEach(function (element) {
+   element.addEventListener('click', function () {
+       const input = document.querySelector(this.getAttribute('data-toggle'));
+       const icon = this.querySelector('i');
+       if (input.type === 'password') {
+           input.type = 'text';
+           icon.classList.remove('fa-eye');
+           icon.classList.add('fa-eye-slash');
+       } else {
+           input.type = 'password';
+           icon.classList.remove('fa-eye-slash');
+           icon.classList.add('fa-eye');
+       }
+   });
+ });
+ </script>
+ <script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const emailInput = document.getElementById('id_email'); // Email input field
+      const emailDisplay = document.getElementById('userEmail'); // Email display in modal
+      const modalTrigger = document.querySelector('[data-bs-target="#emailVerificationModal"]'); // Modal trigger
+  
+      // Update email in modal when the modal is triggered
+      modalTrigger.addEventListener('click', function () {
+          const enteredEmail = emailInput.value.trim(); // Get email input value
+          if (enteredEmail) {
+              emailDisplay.textContent = enteredEmail; // Update modal content
+          } else {
+              emailDisplay.textContent = 'No email entered'; // Fallback for empty input
+          }
+      });
+  });
+  </script>
+  
+<!-- OTP Notification Modal -->
+<div class="modal fade" id="emailVerificationModal" tabindex="-1" aria-labelledby="emailVerificationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg border-0">
+          <div class="modal-header bg-warning text-white">
+              <h5 class="modal-title" id="emailVerificationModalLabel">OTP Verification</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+              <!-- Email OTP Notification -->
+              <p class="mb-3">
+                  <i class="fas fa-envelope text-success me-2"></i>
+                  An OTP has been sent to your email address: 
+                  <strong id="userEmail" class="text-primary">example@domain.com</strong>.
+              </p>
+              <!-- OTP Input Field -->
+              <div class="form-group">
+                  <label for="otpInput" class="form-label fw-bold">Enter OTP</label>
+                  <input 
+                      type="text" 
+                      id="otpInput" 
+                      class="form-control border-primary shadow-sm" 
+                      placeholder="Enter OTP" 
+                      required>
+              </div>
+          </div>
+          <div class="modal-footer bg-light">
+              <button type="button" class="btn btn-success" id="verifyOtpButton">
+                  <i class="fas fa-check"></i> Verify OTP
+              </button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  <i class="fas fa-times"></i> Cancel
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+
 {% endblock %}
